@@ -84,7 +84,7 @@ Table of Contents
      2.2. Key establishment for OSCOAP  . . . . . . . . . . . . . . .  4
    3. Client to Authorization Server  . . . . . . . . . . . . . . . . 11
    4. Resource Server to Authorization Server . . . . . . . . . . . . 11
-   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 12
+   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 11
    6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 12
    7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
    8.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
@@ -123,7 +123,7 @@ Note that the term "endpoint" is used here following its OAuth definition, which
 .ti 0
 2. Client to Resource Server
 
-The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters for to negotiating the use of this profile with the token endpoint at the authorization server as specified in section 5.5 of the ACE framework [I-D.ietf-ace-oauth-authz].
+The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters needed to negotiate the use of this profile with the token endpoint at the authorization server as specified in section 5.5 of the ACE framework [I-D.ietf-ace-oauth-authz].
 
 .ti 0
 2.1. Signaling the use of OSCOAP
@@ -139,22 +139,22 @@ Note the the client and the authorization server MAY OPTIONALLY use OSCOAP to pr
 .ti 0
 2.2. Key establishment for OSCOAP
 
-Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric base\_key and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as base_key in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a base_key is derived.
+Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric master secret and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as master secret in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a master secret is derived.
 
-If OSCOAP is used directly with the symmetric pop-key as base\_key, then the AS MUST provision the following data, in response to the access token request:
+If OSCOAP is used directly with the symmetric pop-key as master secret, then the AS MUST provision the following data, in response to the access token request:
 
 .ti 6
 o  a symmetric key (pop-key)
 .ti 6
 o  an AEAD algorithm
 .ti 6
-o  an KDF algorithm
+o  a KDF algorithm
 .ti 6
 o  the sender identifier
 .ti 6
 o  the recipient identifier
 
-The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used as the context identifier.  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
+The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
 The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
 
 Note that C should receive the client id as 'sid' and the RS id as 'rid', while the RS should receive the RS id as 'sid' and the client id as 'rid'.
@@ -191,10 +191,9 @@ Figure 1 shows an example of such an AS response, in CBOR diagnostic notation wi
         "cnf" : {
           "COSE_Key" : {
             "kty" : "Symmetric",
-            "kid" : b64'5tOS+h42dkw',
             "alg" : "AES-CCM-16-64-128",
             "sid" : b64'qA',
-            "cid" : b64'Qg',
+            "rid" : b64'Qg',
             "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
           }
         }
@@ -216,10 +215,9 @@ tag and value abbreviations.
       "cnf" : {
         "COSE_Key" : {
           "kty" : "Symmetric",
-          "kid" : b64'5tOS+h42dkw',
           "alg" : "AES-CCM-16-64-128",
           "sid" : b64'Qg',
-          "cid" : b64'qA',
+          "rid" : b64'qA',
           "k" : b64'+a+Dg2jjU+eIiOFCa9lObw' 
       }
     }
@@ -310,16 +308,16 @@ tag and value abbreviations.
       Figure 5: Example CWT with EDHOC+OSCOAP parameters.
 .fi
 
-All other parameters defining OSCOAP security context are derived from EDHOC message exchange, including the base_key (see Appendix B of [I-D.ietf-core-object-security]).
+All other parameters defining OSCOAP security context are derived from EDHOC message exchange, including the master secret (see Appendix C.2 of [I-D.selander-ace-cose-ecdhe]).
 
-To provide forward secrecy and mutual authentication in the case of pre-shared keys, pre-established raw public keys or with X.509 certificates it is RECOMMENDED to use EDHOC [I-D.selander-ace-cose-ecdhe] to generate the keying material.  EDHOC MUST be used as defined in Appendix B, with the following additions and modifications.
+To provide forward secrecy and mutual authentication in the case of pre-shared keys, pre-established raw public keys or with X.509 certificates it is RECOMMENDED to use EDHOC [I-D.selander-ace-cose-ecdhe] to generate the keying material.  EDHOC MUST be used as defined in Appendix C, with the following additions and modifications.
 
-The first CoAP message is sent to the RS using the /authz-info endpoint as specified in section 5.7.1 of the ACE framework. This message MUST carry message_1 of the EDHOC protocol (section 4.1.1. if asymmetric keys are used or 5.1.1. if symmetric keys are used of [I-D.selander-ace-cose-ecdhe]) in the CoAP payload, and the access token MUST be added to the message_1 CBOR map, with the label 'access_token' (Figure 11 of [I-D.ietf-ace-oauth-authz]).  An example can be seen in the first message (POST) of Figure 1.
+The first CoAP message is sent to the RS using the /authz-info endpoint as specified in section 5.7.1 of the ACE framework. This message MUST carry message_1 of the EDHOC protocol (section 4.2. if asymmetric keys are used or 5.2. if symmetric keys are used of [I-D.selander-ace-cose-ecdhe]) in the CoAP payload, and the access token MUST be added to the message_1 APP_1 as an element in a serialized CBOR map, with the label 'access_token' (Figure 11 of [I-D.ietf-ace-oauth-authz]).  An example can be seen in the first message (POST) of Figure 1.
 
-Before the RS continues with the EDHOC protocol and responds to this token submission request, additional verifications on the access token are done: the RS SHALL process the access token according to [I-D.ietf-ace-oauth-authz].  If the token is valid then the RS continues processing EDHOC following Appendix B of [I-D.selander-ace-cose-ecdhe], else it discontinues EDHOC and responds with the error code as specified in [I-D.ietf-ace-oauth-authz].
+Before the RS continues with the EDHOC protocol and responds to this token submission request, additional verifications on the access token are done: the RS SHALL process the access token according to [I-D.ietf-ace-oauth-authz].  If the token is valid then the RS continues processing EDHOC following Appendix C of [I-D.selander-ace-cose-ecdhe], else it discontinues EDHOC and responds with the error code as specified in [I-D.ietf-ace-oauth-authz].
 
 .in 3
-When the RS receives an OSCOAP message including a field with label 'edhoc_m3' in the unprotected Headers of the COSE object, it SHALL follow the process described in Appendix B of [I-D.selander-ace-cose-ecdhe].  If the OSCOAP message was valid, the RS SHALL also verify that the client is authorized to perform the requested action on the requested resource using the previously received access token. 
+When the RS receives an OSCOAP message including a field with label 'edhoc_m3' in the unprotected Headers of the COSE object, it SHALL follow the process described in Appendix C of [I-D.selander-ace-cose-ecdhe].  If the OSCOAP message was valid, the RS SHALL also verify that the client is authorized to perform the requested action on the requested resource using the previously received access token. 
 
 .ti 6
 o  In case the EDHOC verification fails, the RS MUST return an error response to the client with code 4.01 (Unauthorized).
@@ -371,27 +369,25 @@ Note that if the OSCOAP profile is used, the /authz-info endpoint at the Resourc
 Figure 7 shows an example of message_1 with an access token embedded in the unprotected header.
 
 .nf   
-     {
-     'N_U' : h'5598a57b47db7f2c',
-     'E_U' : h'a120a50102024478f679012001215
-               82098f50a4ff6c05861c8860d13a6
-               38ea56c3f5ad7590bbfbf054e1c7b
-               4d91d628022f5',		# COSE_Key
-     'ALG_U' : [
-         [ -27 ],			# ECDH-SS + HKDF-256
-         [ 12 ], 			# AES-CCM-64-64-128
-         [ -7 ], 			# ES256
-         [ 4 ] 			# HMAC 256/64
-         ],
-     18 : h'4a5015df6864286979'
+     [
+     1,                            # message type
+     h'05c2dc'                     # session identifier
+     h'5598a57b47db7f2c',          # random nonce
+     h'a120a50102024478f679012001215
+       82098f50a4ff6c05861c8860d13a6
+       38ea56c3f5ad7590bbfbf054e1c7b
+       4d91d628022f5',		# COSE_Key
+     [1]                            # NIST P-256
+     [ -27 ],			# ECDH-SS + HKDF-256
+     [ 12 ], 			# AES-CCM-64-64-128
+     [ -7 ], 			# ES256
+     [ -7 ], 			# ES256
+     h'a16c6163636573735f746f6b656e # APP_3: access token
+       ...
      } 
       
 Figure 7: diagnostic notation of EDHOC message_1 with an access token
 .fi
-
-N_U, E_U, and ALG_U, as defined in [I-D.selander-ace-cose-ecdhe], are the freshness nonce for party U, the ECDH ephemeral public keys of party U,
-and the proposed set of algorithms to be negotiated, respectively.
-
 
 .ti 0
 3. Client to Authorization Server
@@ -467,12 +463,6 @@ Jones, M., Wahlstroem, E., Erdtman S. and H. Tschofenig. "CBOR Web Token (CWT)",
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 2119, 7252
-.ti 3
-[RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP\014, RFC\02119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
-
-.ti 3
-[RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained Application Protocol (CoAP)", RFC\07252, DOI 10.17487/RFC7252, June 2014, <http://www.rfc-editor.org/info/rfc7252>.
-
 .\" \# ERF -- End of managed reference list
 .\" ----------------------------------------
 .\" The reference list can be changed at any time by altering the RFC list in the line below the .\" \# REF directive
@@ -498,18 +488,6 @@ Gerdes, S., Bergmann, O., Bormann C. "Delegated CoAP Authentication and Authoriz
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 4949, 6749, 7049, 7231
-.ti 3
-[RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", FYI 36, RFC\04949, DOI 10.17487/RFC4949, August 2007, <http://www.rfc-editor.org/info/rfc4949>.
-
-.ti 3
-[RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework", RFC\06749, DOI 10.17487/RFC6749, October 2012, <http://www.rfc-editor.org/info/rfc6749>.
-
-.ti 3
-[RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object Representation (CBOR)", RFC\07049, DOI 10.17487/RFC7049, October 2013, <http://www.rfc-editor.org/info/rfc7049>.
-
-.ti 3
-[RFC7231]  Fielding, R., Ed., and J. Reschke, Ed., "Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content", RFC\07231, DOI 10.17487/RFC7231, June 2014, <http://www.rfc-editor.org/info/rfc7231>.
-
 .\" \# ERF -- End of managed reference list
 
 .ti 0

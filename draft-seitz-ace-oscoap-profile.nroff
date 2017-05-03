@@ -123,16 +123,16 @@ Note that the term "endpoint" is used here following its OAuth definition, which
 .ti 0
 2. Client to Resource Server
 
-The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters for to negotiating the use of this profile with the token endpoint at the authorization server as specified in section 6.FIXME of the ACE framework [I-D.ietf-ace-oauth-authz].
+The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters for to negotiating the use of this profile with the token endpoint at the authorization server as specified in section 5.5 of the ACE framework [I-D.ietf-ace-oauth-authz].
 
 .ti 0
 2.1. Signaling the use of OSCOAP
 
-A client requests a token at an AS via the /token endpoint.  This follows the message formats specified in section 6.1FIXME of the ACE framework [I-D.ietf.ace-oauth-authz].
+A client requests a token at an AS via the /token endpoint.  This follows the message formats specified in section 5.5.1 of the ACE framework [I-D.ietf.ace-oauth-authz].
 
-The AS responding to a successful access token request as defined in section 6.2FIXME of the ACE framework can signal that the use of OSCOAP is REQUIRED for a specific access token by including the "profile" parameter with the value "coap_oscoap" in the access token response.  This means that the client MUST use OSCOAP towards all resource servers for which this access token is valid.
+The AS responding to a successful access token request as defined in section 5.5.2 of the ACE framework can signal that the use of OSCOAP is REQUIRED for a specific access token by including the "profile" parameter with the value "coap_oscoap" in the access token response.  This means that the client MUST use OSCOAP towards all resource servers for which this access token is valid.
 
-The error response procedures defined in section 6.3FIXME of the ACE framework are unchanged by this profile.
+The error response procedures defined in section 5.5.3 of the ACE framework are unchanged by this profile.
 
 Note the the client and the authorization server MAY OPTIONALLY use OSCOAP to protect the interaction via the /token endpoint. See section 3 for details.
 
@@ -154,7 +154,7 @@ o  the sender identifier
 .ti 6
 o  the recipient identifier
 
-The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 6.2. of [I-D.ietf-ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used as the context identifier.  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
+The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used as the context identifier.  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
 The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
 
 Note that C should receive the client id as 'sid' and the RS id as 'rid', while the RS should receive the RS id as 'sid' and the client id as 'rid'.
@@ -236,7 +236,7 @@ o  if the pop-key is symmetric, a key identifier;
 
 How these parameters are communicated depends on the type of key (asymmetric or symmetric).  
 
-In case of an asymmetric key, C MUST communicate the key to the AS in the 'cnf' parameter of the access token request, as specified in section 6.1 of [I-D.ietf-ace-oauth-authz].
+In case of an asymmetric key, C MUST communicate the key to the AS in the 'cnf' parameter of the access token request, as specified in section 5.5.1 of [I-D.ietf-ace-oauth-authz].
 
 Figure 3 shows an example of such a request in CBOR diagnostic notation without tag and value abbreviations.
 
@@ -263,7 +263,7 @@ Figure 3 shows an example of such a request in CBOR diagnostic notation without 
 
 
 In the case of a symmetric key, the AS MUST communicate the key to the client in the 'cnf' parameter of the access token response, as specified in
-section 6.2. of [I-D.ietf-ace-oauth-authz].   AS MUST also select a key identifier, that MUST be included as the 'kid' parameter either directly in the 'cnf' structure, as in figure 4 of [I-D.ietf-ace-oauth-authz], or as the 'kid' parameter of the COSE_key, as in figure 3 of [I-D.ietf-ace-oauth-authz].
+section 5.5.2. of [I-D.ietf-ace-oauth-authz].   AS MUST also select a key identifier, that MUST be included as the 'kid' parameter either directly in the 'cnf' structure, as in figure 4 of [I-D.ietf-ace-oauth-authz], or as the 'kid' parameter of the COSE_key, as in figure 3 of [I-D.ietf-ace-oauth-authz].
 
 Figure 4 shows an example of the necessary parameters in the AS response to the access token request when EDHOC is used.  The example uses CBOR  diagnostic notation without tag and value abbreviations.
 
@@ -314,7 +314,7 @@ All other parameters defining OSCOAP security context are derived from EDHOC mes
 
 To provide forward secrecy and mutual authentication in the case of pre-shared keys, pre-established raw public keys or with X.509 certificates it is RECOMMENDED to use EDHOC [I-D.selander-ace-cose-ecdhe] to generate the keying material.  EDHOC MUST be used as defined in Appendix B, with the following additions and modifications.
 
-The first CoAP message is sent to the RS using the /authz-info endpoint as specified in section 8.1 of the ACE framework. This message MUST carry message_1 of the EDHOC protocol (section 4.1.1. if asymmetric keys are used or 5.1.1. if symmetric keys are used of [I-D.selander-ace-cose-ecdhe]) in the CoAP payload, and the access token MUST be added to the message_1 CBOR map, with the label 'access_token' (Figure 11 of [I-D.ietf-ace-oauth-authz]).  An example can be seen in the first message (POST) of Figure 1.
+The first CoAP message is sent to the RS using the /authz-info endpoint as specified in section 5.7.1 of the ACE framework. This message MUST carry message_1 of the EDHOC protocol (section 4.1.1. if asymmetric keys are used or 5.1.1. if symmetric keys are used of [I-D.selander-ace-cose-ecdhe]) in the CoAP payload, and the access token MUST be added to the message_1 CBOR map, with the label 'access_token' (Figure 11 of [I-D.ietf-ace-oauth-authz]).  An example can be seen in the first message (POST) of Figure 1.
 
 Before the RS continues with the EDHOC protocol and responds to this token submission request, additional verifications on the access token are done: the RS SHALL process the access token according to [I-D.ietf-ace-oauth-authz].  If the token is valid then the RS continues processing EDHOC following Appendix B of [I-D.selander-ace-cose-ecdhe], else it discontinues EDHOC and responds with the error code as specified in [I-D.ietf-ace-oauth-authz].
 
@@ -333,7 +333,7 @@ o  If RS has an access token for C but it does not cover the action C requested 
 .in 3
 If all verifications above succeeds, further communication between client and RS is protected with OSCOAP, including the RS response to the OSCOAP request.
 
-In the case of EDHOC being used with symmetric pop-keys, the protocol in section 5 of [I-D.selander-ace-cose-ecdhe] MUST be used.  If the pop-key is asymmetric, the RS MUST also use an asymmetric key for authentication.  This key is known to the client through the access token response (see section 6.2 of the ACE framework).  In this case the protocol in section 4 of [I-D.selander-ace-cose-ecdhe] MUST be used.
+In the case of EDHOC being used with symmetric pop-keys, the protocol in section 5 of [I-D.selander-ace-cose-ecdhe] MUST be used.  If the pop-key is asymmetric, the RS MUST also use an asymmetric key for authentication.  This key is known to the client through the access token response (see section 5.5.2 of the ACE framework).  In this case the protocol in section 4 of [I-D.selander-ace-cose-ecdhe] MUST be used.
 
 Note that if the OSCOAP profile is used, the /authz-info endpoint at the Resource Server MUST be prepared to process and generate the protocol messages of the EDHOC protocol as specified above.  Hence the use of EDHOC does not add any additional roundtrips to the ACE message exchange.
 
@@ -396,17 +396,17 @@ and the proposed set of algorithms to be negotiated, respectively.
 .ti 0
 3. Client to Authorization Server
 
-As specified in the ACE framework section 5 [I-D.ietf-ace-oauth-authz], the Client and AS can also use CoAP instead of HTTP to communicate via the token endpoint.  This section specifies how to use OSCOAP between Client and AS together with CoAP.  The use of OSCOAP for this communication is OPTIONAL in this profile, other security protocols (such as DTLS) MAY be used instead.
+As specified in the ACE framework section 5.5 [I-D.ietf-ace-oauth-authz], the Client and AS can also use CoAP instead of HTTP to communicate via the token endpoint.  This section specifies how to use OSCOAP between Client and AS together with CoAP.  The use of OSCOAP for this communication is OPTIONAL in this profile, other security protocols (such as DTLS) MAY be used instead.
  
-The client and the AS are expected to have pre-established credentials (e.g. raw public keys).  How these credentials are established is out of scope for this profile.  Furthermore the client and the AS communicate using CoAP through the token endpoint as specified in section 6 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior to making the token request and response, the client and the AS MAY perform an EDHOC exchange with the pre-established credentials to create forward secret keying material for use with OSCOAP.  Subsequent requests and the responses MUST be protected with OSCOAP.
+The client and the AS are expected to have pre-established credentials (e.g. raw public keys).  How these credentials are established is out of scope for this profile.  Furthermore the client and the AS communicate using CoAP through the token endpoint as specified in section 5.5 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior to making the token request and response, the client and the AS MAY perform an EDHOC exchange with the pre-established credentials to create forward secret keying material for use with OSCOAP.  Subsequent requests and the responses MUST be protected with OSCOAP.
 
 
 .ti 0
 4. Resource Server to Authorization Server
 
-As specified in the ACE framework section 5 [I-D.ietf-ace-oauth-authz], the RS and AS can also use CoAP instead of HTTP to communicate via the introspection endpoint.  This section specifies how to use OSCOAP between RS and AS together with CoAP.  The use of OSCOAP for this communication is OPTIONAL in this profile, other security protocols (such as DTLS) MAY be used instead.
+As specified in the ACE framework section 5.6 [I-D.ietf-ace-oauth-authz], the RS and AS can also use CoAP instead of HTTP to communicate via the introspection endpoint.  This section specifies how to use OSCOAP between RS and AS together with CoAP.  The use of OSCOAP for this communication is OPTIONAL in this profile, other security protocols (such as DTLS) MAY be used instead.
 
-The RS and the AS are expected to have pre-established credentials (e.g. symmetric keys).  How these credentials are established is out of scope for this profile.  Furthermore the RS and the AS communicate using CoAP through the introspection endpoint as specified in section 7 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior to making the introspection request and response, the RS and the AS MAY perform an EDHOC exchange with the pre-established credentials to create forward secret keying material for use with OSCOAP.  Subsequent requests and the responses MUST be protected with OSCOAP.
+The RS and the AS are expected to have pre-established credentials (e.g. symmetric keys).  How these credentials are established is out of scope for this profile.  Furthermore the RS and the AS communicate using CoAP through the introspection endpoint as specified in section 5.6 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior to making the introspection request and response, the RS and the AS MAY perform an EDHOC exchange with the pre-established credentials to create forward secret keying material for use with OSCOAP.  Subsequent requests and the responses MUST be protected with OSCOAP.
 
 
 .ti 0

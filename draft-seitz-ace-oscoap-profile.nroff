@@ -36,7 +36,7 @@
 
 .ce 2
 OSCOAP profile of ACE
-draft-seitz-ace-oscoap-profile-01
+draft-seitz-ace-oscoap-profile-02
 .fi
 
 
@@ -155,7 +155,7 @@ o  the sender identifier
 o  the recipient identifier
 
 The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used as the context identifier.  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
-The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1.FIXME of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
+The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
 
 Note that C should receive the client id as 'sid' and the RS id as 'rid', while the RS should receive the RS id as 'sid' and the client id as 'rid'.
  

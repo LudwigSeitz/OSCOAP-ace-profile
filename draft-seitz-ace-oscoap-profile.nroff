@@ -139,23 +139,23 @@ Note the the client and the authorization server MAY OPTIONALLY use OSCOAP to pr
 .ti 0
 2.2. Key establishment for OSCOAP
 
-Section 3.2FIXME of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric base\_key and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as base_key in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a base_key is derived.
+Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric base\_key and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as base_key in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a base_key is derived.
 
 If OSCOAP is used directly with the symmetric pop-key as base\_key, then the AS MUST provision the following data, in response to the access token request:
 
 .ti 6
 o  a symmetric key (pop-key)
 .ti 6
-o  a context identifier
-.ti 6
 o  an AEAD algorithm
+.ti 6
+o  an KDF algorithm
 .ti 6
 o  the sender identifier
 .ti 6
 o  the recipient identifier
 
 The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used as the context identifier.  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
-The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
+The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1.FIXME of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
 
 Note that C should receive the client id as 'sid' and the RS id as 'rid', while the RS should receive the RS id as 'sid' and the client id as 'rid'.
  

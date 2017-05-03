@@ -87,7 +87,7 @@ Table of Contents
    5. Security Considerations . . . . . . . . . . . . . . . . . . . . 12
    6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 12
    7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
-   8.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
+   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 12
    9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 12
      9.1  Normative References  . . . . . . . . . . . . . . . . . . . 12
      9.2  Informative References  . . . . . . . . . . . . . . . . . . 13
@@ -425,7 +425,7 @@ TBD. 'coap_oscoap' as profile id. Header parameters 'sid' and 'rid' for COSE_Key
 
 
 .ti 0
-8.  Acknowledgements
+8.  Acknowledgments
 
 The author wishes to thank Goeran Selander for the input on this memo.  The error responses specified in section 2.2. were originally specified by
 Gerdes et al. in [I-D.gerdes-ace-dcaf-authorize].

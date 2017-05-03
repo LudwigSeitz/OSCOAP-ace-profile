@@ -4,7 +4,7 @@
 .lt 7.2i
 .nr LL 7.2i
 .nr LT 7.2i
-.ds LF Seitz, L. 
+.ds LF Seitz, L.
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
 .ds RH May 3, 2017
@@ -174,7 +174,7 @@ Note that C should receive the client id as 'sid' and the RS id as 'rid', while 
 |         |       |                |            | using this key    |
 +---------+-------+----------------+------------+-------------------+
 
-	Table 1: Additional common header parameters for COSE_Key 
+        Table 1: Additional common header parameters for COSE_Key 
 .fi
 
 Figure 1 shows an example of such an AS response, in CBOR diagnostic notation without the tag and value abbreviations.
@@ -232,7 +232,7 @@ o  a symmetric or asymmetric key (pop-key)
 .ti 6
 o  if the pop-key is symmetric, a key identifier;
 
-How these parameters are communicated depends on the type of key (asymmetric or symmetric).  
+How these parameters are communicated depends on the type of key (asymmetric or symmetric).
 
 In case of an asymmetric key, C MUST communicate the key to the AS in the 'cnf' parameter of the access token request, as specified in section 5.5.1 of [I-D.ietf-ace-oauth-authz].
 
@@ -377,12 +377,12 @@ Figure 7 shows an example of message_1 with an access token embedded in the unpr
        h'a120a50102024478f679012001215
          82098f50a4ff6c05861c8860d13a6
          38ea56c3f5ad7590bbfbf054e1c7b
-         4d91d628022f5',		# COSE_Key
-       [1]                            # NIST P-256
-       [ -27 ],			# ECDH-SS + HKDF-256
-       [ 12 ], 			# AES-CCM-64-64-128
-       [ -7 ], 			# ES256
-       [ -7 ], 			# ES256
+         4d91d628022f5',             # COSE_Key
+       [1]                           # NIST P-256
+       [ -27 ],                      # ECDH-SS + HKDF-256
+       [ 12 ],                       # AES-CCM-64-64-128
+       [ -7 ],                       # ES256
+       [ -7 ],                       # ES256
        h'a16c6163636573735f746f6b656e # APP_3: access token
          ...
      ] 
@@ -484,7 +484,7 @@ Jones, M., Wahlstroem, E., Erdtman S. and H. Tschofenig. "CBOR Web Token (CWT)",
 .in 14
 
 .ti 3
-[I-D.gerdes-ace-actors]
+[I-D.ietf-ace-actors]
 .br
 Gerdes, S., Seitz, L., Selander, G., and C. Bormann (ed). "An Architecture for Authorization in Constrained Environments", draft-ietf-ace-actors-05 (work in progress), March 2017. 
 

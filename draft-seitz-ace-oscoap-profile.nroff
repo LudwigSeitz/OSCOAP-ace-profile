@@ -444,26 +444,26 @@ Gerdes et al. in [I-D.gerdes-ace-dcaf-authorize].
 .ti 3
 [I-D.ietf-core-object-security]
 .br
-Selander, G., Mattsson, J., Palombini, F., and L. Seitz, "Object Security of CoAP (OSCOAP)", draft-ietf-core-object-security-00 (work in progress), October 2016.
+Selander, G., Mattsson, J., Palombini, F., and L. Seitz, "Object Security of CoAP (OSCOAP)", draft-ietf-core-object-security-02 (work in progress), March 2017.
 
 .ti 3
 [I-D.selander-ace-cose-ecdhe]
 .br
-Selander, G., Mattsson, J., and F. Palombini, "Ephemeral Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-cose-ecdhe-04 (work in progress), October 2016.
+Selander, G., Mattsson, J., and F. Palombini, "Ephemeral Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-cose-ecdhe-06 (work in progress), April 2017.
 
 .ti 3
 [I-D.ietf-cose-msg]
 .br
-Schaad, J., "CBOR Object Signing and Encryption (COSE)", draft-ietf-cose-msg-23 (work in progress), October 2016.
+Schaad, J., "CBOR Object Signing and Encryption (COSE)", draft-ietf-cose-msg-24 (work in progress), November 2016.
 
 .ti 3
 [I-D.ietf-ace-oauth-authz]
 .br
-Seitz, L., Selander, G., Wahlstroem, E., Erdtmann, S., and H. Tschofenig. "Authentication and Authorization for Constrained Environments (ACE)", draft-ietf-ace-oauth-authz-04 (work in progress), October 2016.
+Seitz, L., Selander, G., Wahlstroem, E., Erdtmann, S., and H. Tschofenig. "Authentication and Authorization for Constrained Environments (ACE)", draft-ietf-ace-oauth-authz-06 (work in progress), March 2017.
 
 .ti 3
 [I-D.ietf-ace-cbor-web-token]
-Wahlstroem, E., Jones, M., Tschofenig, H., and S. Erdtman. "CBOR Web Token (CWT)", draft-ietf-ace-cbor-web-token-01 (work in progress), July 2016.
+Jones, M., Wahlstroem, E., Erdtman S. and H. Tschofenig. "CBOR Web Token (CWT)", draft-ietf-ace-cbor-web-token-04 (work in progress), April 2017.
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 2119, 7252
@@ -489,7 +489,7 @@ Wahlstroem, E., Jones, M., Tschofenig, H., and S. Erdtman. "CBOR Web Token (CWT)
 .ti 3
 [I-D.gerdes-ace-actors]
 .br
-Gerdes, S., Seitz, L., Selander, G., and C. Bormann (ed). "An Arhitecture for Authorization in Constrained Environments", draft-ietf-ace-actors-03 (work in progress), March 2016. 
+Gerdes, S., Seitz, L., Selander, G., and C. Bormann (ed). "An Architecture for Authorization in Constrained Environments", draft-ietf-ace-actors-05 (work in progress), March 2017. 
 
 .ti 3
 [I-D.gerdes-ace-dcaf-authorize]

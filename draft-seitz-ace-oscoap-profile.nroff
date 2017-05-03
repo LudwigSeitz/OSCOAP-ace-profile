@@ -84,14 +84,14 @@ Table of Contents
      2.2. Key establishment for OSCOAP  . . . . . . . . . . . . . . .  4
    3. Client to Authorization Server  . . . . . . . . . . . . . . . . 11
    4. Resource Server to Authorization Server . . . . . . . . . . . . 11
-   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 11
+   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 12
    6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 12
    7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
    8.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
    9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 12
      9.1  Normative References  . . . . . . . . . . . . . . . . . . . 12
      9.2  Informative References  . . . . . . . . . . . . . . . . . . 13
-   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 13
+   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 14
 .fi
 .in 3
 
@@ -367,24 +367,25 @@ Note that if the OSCOAP profile is used, the /authz-info endpoint at the Resourc
 .fi
 
 Figure 7 shows an example of message_1 with an access token embedded in the unprotected header.
+.bp
 
 .nf   
      [
-     1,                            # message type
-     h'05c2dc'                     # session identifier
-     h'5598a57b47db7f2c',          # random nonce
-     h'a120a50102024478f679012001215
-       82098f50a4ff6c05861c8860d13a6
-       38ea56c3f5ad7590bbfbf054e1c7b
-       4d91d628022f5',		# COSE_Key
-     [1]                            # NIST P-256
-     [ -27 ],			# ECDH-SS + HKDF-256
-     [ 12 ], 			# AES-CCM-64-64-128
-     [ -7 ], 			# ES256
-     [ -7 ], 			# ES256
-     h'a16c6163636573735f746f6b656e # APP_3: access token
-       ...
-     } 
+       1,                            # message type
+       h'05c2dc'                     # session identifier
+       h'5598a57b47db7f2c',          # random nonce
+       h'a120a50102024478f679012001215
+         82098f50a4ff6c05861c8860d13a6
+         38ea56c3f5ad7590bbfbf054e1c7b
+         4d91d628022f5',		# COSE_Key
+       [1]                            # NIST P-256
+       [ -27 ],			# ECDH-SS + HKDF-256
+       [ 12 ], 			# AES-CCM-64-64-128
+       [ -7 ], 			# ES256
+       [ -7 ], 			# ES256
+       h'a16c6163636573735f746f6b656e # APP_3: access token
+         ...
+     ] 
       
 Figure 7: diagnostic notation of EDHOC message_1 with an access token
 .fi
@@ -463,6 +464,12 @@ Jones, M., Wahlstroem, E., Erdtman S. and H. Tschofenig. "CBOR Web Token (CWT)",
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 2119, 7252
+.ti 3
+[RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP\014, RFC\02119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
+
+.ti 3
+[RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained Application Protocol (CoAP)", RFC\07252, DOI 10.17487/RFC7252, June 2014, <http://www.rfc-editor.org/info/rfc7252>.
+
 .\" \# ERF -- End of managed reference list
 .\" ----------------------------------------
 .\" The reference list can be changed at any time by altering the RFC list in the line below the .\" \# REF directive
@@ -488,6 +495,18 @@ Gerdes, S., Bergmann, O., Bormann C. "Delegated CoAP Authentication and Authoriz
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 4949, 6749, 7049, 7231
+.ti 3
+[RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", FYI 36, RFC\04949, DOI 10.17487/RFC4949, August 2007, <http://www.rfc-editor.org/info/rfc4949>.
+
+.ti 3
+[RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework", RFC\06749, DOI 10.17487/RFC6749, October 2012, <http://www.rfc-editor.org/info/rfc6749>.
+
+.ti 3
+[RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object Representation (CBOR)", RFC\07049, DOI 10.17487/RFC7049, October 2013, <http://www.rfc-editor.org/info/rfc7049>.
+
+.ti 3
+[RFC7231]  Fielding, R., Ed., and J. Reschke, Ed., "Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content", RFC\07231, DOI 10.17487/RFC7231, June 2014, <http://www.rfc-editor.org/info/rfc7231>.
+
 .\" \# ERF -- End of managed reference list
 
 .ti 0

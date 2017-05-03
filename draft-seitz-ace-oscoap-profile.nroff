@@ -1,4 +1,5 @@
-October 31, 2016.po 0
+.pl 10.0i
+.po 0
 .ll 7.2i
 .lt 7.2i
 .nr LL 7.2i
@@ -6,9 +7,9 @@ October 31, 2016.po 0
 .ds LF Seitz, L. 
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH October 31, 2016
+.ds RH May 3, 2017
 .ds CH OSCOAP profile of ACE
-.ds CF Expires May 4, 2017
+.ds CF Expires November 4, 2017
 .hy 0
 .nh
 .ad l
@@ -16,10 +17,11 @@ October 31, 2016.po 0
 
 .nf
 .tl 'ACE Working Group''L. Seitz'
-.tl '''SICS Swedish ICT'
-.tl 'Internet-Draft''F. Palombini'
-.tl 'Intended Status: Standards Track''Ericsson AB'
-.tl 'Expires: May 4, 2017''October 31, 2016'
+.tl 'Internet-Draft''M. Gunnarsson'
+.tl 'Intended Status: Standards Track''RISE SICS AB'
+.tl 'Expires: November 4, 2017''F. Palombini'
+.tl '''Ericsson AB'
+.tl '''May 3, 2017'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -63,7 +65,7 @@ The list of Internet-Draft Shadow Directories can be accessed at http://www.ietf
 Copyright and License Notice\" Boilerplate from December 2009
 
 .\" NOTE: Insert current <year> in the following paragraph
-Copyright (c) 2016 IETF Trust and the persons identified as the document authors.  All rights reserved.
+Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.
 
 This document is subject to BCP\078 and the IETF Trust's Legal Provisions Relating to IETF Documents \%(http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section\04.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.
 
@@ -121,23 +123,23 @@ Note that the term "endpoint" is used here following its OAuth definition, which
 .ti 0
 2. Client to Resource Server
 
-The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters for to negotiating the use of this profile with the token endpoint at the authorization server as specified in section 6 of the ACE framework [I-D.ietf-ace-oauth-authz].
+The use of OSCOAP for arbitrary CoAP messages is specified in [I-D.ietf-core-object-security].  This section defines the specific uses and their purpose for securing the communication between a client and a resource server, and the parameters for to negotiating the use of this profile with the token endpoint at the authorization server as specified in section 6.FIXME of the ACE framework [I-D.ietf-ace-oauth-authz].
 
 .ti 0
 2.1. Signaling the use of OSCOAP
 
-A client requests a token at an AS via the /token endpoint.  This follows the message formats specified in section 6.1 of the ACE framework [I-D.ietf.ace-oauth-authz].
+A client requests a token at an AS via the /token endpoint.  This follows the message formats specified in section 6.1FIXME of the ACE framework [I-D.ietf.ace-oauth-authz].
 
-The AS responding to a successful access token request as defined in section 6.2 of the ACE framework can signal that the use of OSCOAP is REQUIRED for a specific access token by including the "profile" parameter with the value "coap_oscoap" in the access token response.  This means that the client MUST use OSCOAP towards all resource servers for which this access token is valid.
+The AS responding to a successful access token request as defined in section 6.2FIXME of the ACE framework can signal that the use of OSCOAP is REQUIRED for a specific access token by including the "profile" parameter with the value "coap_oscoap" in the access token response.  This means that the client MUST use OSCOAP towards all resource servers for which this access token is valid.
 
-The error response procedures defined in section 6.3 of the ACE framework are unchanged by this profile.
+The error response procedures defined in section 6.3FIXME of the ACE framework are unchanged by this profile.
 
 Note the the client and the authorization server MAY OPTIONALLY use OSCOAP to protect the interaction via the /token endpoint. See section 3 for details.
 
 .ti 0
 2.2. Key establishment for OSCOAP
 
-Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric base\_key and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as base_key in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a base_key is derived.
+Section 3.2FIXME of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric base\_key and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as base_key in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a base_key is derived.
 
 If OSCOAP is used directly with the symmetric pop-key as base\_key, then the AS MUST provision the following data, in response to the access token request:
 

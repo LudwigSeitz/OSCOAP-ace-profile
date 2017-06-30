@@ -3,14 +3,15 @@
 
 
 ACE Working Group                                               L. Seitz
-                                                        SICS Swedish ICT
-Internet-Draft                                              F. Palombini
-Intended Status: Standards Track                             Ericsson AB
-Expires: May 4, 2017                                    October 31, 2016
+Internet-Draft                                             M. Gunnarsson
+Intended Status: Standards Track                            RISE SICS AB
+Expires: January 1, 2018                                    F. Palombini
+                                                             Ericsson AB
+                                                           June 30, 2017
 
 
                          OSCOAP profile of ACE
-                   draft-seitz-ace-oscoap-profile-01
+                   draft-seitz-ace-oscoap-profile-03
 
 
 Abstract
@@ -46,18 +47,18 @@ Status of this Memo
 
 Copyright and License Notice
 
-   Copyright (c) 2016 IETF Trust and the persons identified as the
+   Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
  
 
 
-Seitz, L.                 Expires May 4, 2017                   [Page 1]
+Seitz, L.               Expires January 1, 2018                 [Page 1]
 
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
 
 
+   This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
@@ -76,19 +77,18 @@ Table of Contents
    2. Client to Resource Server . . . . . . . . . . . . . . . . . . .  4
      2.1. Signaling the use of OSCOAP . . . . . . . . . . . . . . . .  4
      2.2. Key establishment for OSCOAP  . . . . . . . . . . . . . . .  4
-   3. Client to Authorization Server  . . . . . . . . . . . . . . . . 11
-   4. Resource Server to Authorization Server . . . . . . . . . . . . 11
-   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 12
-   6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 12
-   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
-   8.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 12
-   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 12
-     9.1  Normative References  . . . . . . . . . . . . . . . . . . . 12
-     9.2  Informative References  . . . . . . . . . . . . . . . . . . 13
-   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 13
-
-
-
+       2.2.1 Using the pop-key with OSCOAP directly (OSCOAP)  . . . .  4
+       2.2.1 Using the pop-key with EDHOC (EDHOC+OSCOAP)  . . . . . .  7
+   3. Client to Authorization Server  . . . . . . . . . . . . . . . . 12
+   4. Resource Server to Authorization Server . . . . . . . . . . . . 12
+   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 13
+   6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 13
+   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 13
+   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 13
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+     9.1  Normative References  . . . . . . . . . . . . . . . . . . . 13
+     9.2  Informative References  . . . . . . . . . . . . . . . . . . 14
+   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 14
 
 
 
@@ -109,9 +109,9 @@ Table of Contents
  
 
 
-Seitz, L.                 Expires May 4, 2017                   [Page 2]
+Seitz, L.               Expires January 1, 2018                 [Page 2]
 
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
  
 
 
-Seitz, L.                 Expires May 4, 2017                   [Page 3]
+Seitz, L.               Expires January 1, 2018                 [Page 3]
 
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
 
 
 2. Client to Resource Server
@@ -175,25 +175,25 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    The use of OSCOAP for arbitrary CoAP messages is specified in [I-
    D.ietf-core-object-security].  This section defines the specific uses
    and their purpose for securing the communication between a client and
-   a resource server, and the parameters for to negotiating the use of
+   a resource server, and the parameters needed to negotiate the use of
    this profile with the token endpoint at the authorization server as
-   specified in section 6 of the ACE framework [I-D.ietf-ace-oauth-
+   specified in section 5.5 of the ACE framework [I-D.ietf-ace-oauth-
    authz].
 
 2.1. Signaling the use of OSCOAP
 
    A client requests a token at an AS via the /token endpoint.  This
-   follows the message formats specified in section 6.1 of the ACE
+   follows the message formats specified in section 5.5.1 of the ACE
    framework [I-D.ietf.ace-oauth-authz].
 
    The AS responding to a successful access token request as defined in
-   section 6.2 of the ACE framework can signal that the use of OSCOAP is
-   REQUIRED for a specific access token by including the "profile"
+   section 5.5.2 of the ACE framework can signal that the use of OSCOAP
+   is REQUIRED for a specific access token by including the "profile"
    parameter with the value "coap_oscoap" in the access token response. 
    This means that the client MUST use OSCOAP towards all resource
    servers for which this access token is valid.
 
-   The error response procedures defined in section 6.3 of the ACE
+   The error response procedures defined in section 5.5.3 of the ACE
    framework are unchanged by this profile.
 
    Note the the client and the authorization server MAY OPTIONALLY use
@@ -203,44 +203,58 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
 2.2. Key establishment for OSCOAP
 
    Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to
-   derive a security context based on a symmetric base_key and a few
-   other parameters, established between client and server.  The proof-
-   of-possession key (pop-key) provisioned from the AS MAY, in case of
-   pre-shared keys, be used directly as base_key in OSCOAP. 
-   Alternatively the pop-key (symmetric or asymmetric) MAY be used to
+   derive a security context based on a symmetric master secret and a
+   few other parameters, established between client and server.  The
+   proof-of-possession key (pop-key) provisioned from the AS MAY, in
+   case of pre-shared keys, be used directly as master secret in OSCOAP.
+    Alternatively the pop-key (symmetric or asymmetric) MAY be used to
    authenticate the messages in the key exchange protocol EDHOC [I-
-   D.selander-ace-cose-ecdhe], from which a base_key is derived.
+   D.selander-ace-cose-ecdhe], from which a master secret is derived.
 
-   If OSCOAP is used directly with the symmetric pop-key as base_key,
-   then the AS MUST provision the following data, in response to the
-   access token request:
+2.2.1 Using the pop-key with OSCOAP directly (OSCOAP)
+
+   If OSCOAP is used directly with the symmetric pop-key as master
+   secret, then the AS MUST provision the following data, in response to
+   the access token request:
 
       o  a symmetric key (pop-key)
-      o  a context identifier
-      o  an AEAD algorithm
  
 
 
-Seitz, L.                 Expires May 4, 2017                   [Page 4]
+Seitz, L.               Expires January 1, 2018                 [Page 4]
 
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
 
 
       o  the sender identifier
       o  the recipient identifier
 
+   Additionally, the AS MAY provision the following data, in the same
+   response.  In case these parameters are omitted, the default values
+   are used as described in section 3.2. of [I-D.ietf-core-object-
+   security].
+
+      o  an AEAD algorithm
+      o  a KDF algorithm
+      o  a salt
+
    The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter
-   of the access token response as defined in section 6.2. of [I-D.ietf-
-   ace-oauth-authz].  The 'kid' parameter of this COSE_Key MUST be used
-   as the context identifier.  The AEAD algorithm MUST be included as
-   the 'alg' parameter of the COSE_key.  The same parameters MUST be
-   included as metadata of the access token, if the token is a CWT [I-
-   D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be
-   placed in the 'cnf' claim of this token. The AS MUST also assign
-   identifiers to both client and RS, which are then used as Sender ID
-   and Recipient ID in the OSCOAP context as described in section 3.1.
-   of [I-D.ietf-core-object-security].  These MUST be included in the
-   COSE_Key as header parameters, as defined in table 1.
+   of the access token response as defined in section 5.5.4.5 of [I-
+   D.ietf-ace-oauth-authz].  The AEAD algorithm MAY be included as the
+   'alg' parameter in the COSE_Key; the KDF algorithm MAY be included as
+   the 'kdf' parameter of the COSE_Key and the salt MAY be included as
+   the 'slt' parameter of the COSE_Key as defined in table 1.  The same
+   parameters MUST be included as metadata of the access token, if the
+   token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key
+   structure MUST be placed in the 'cnf' claim of this token. The AS
+   MUST also assign identifiers to both client and RS, which are then
+   used as Sender ID and Recipient ID in the OSCOAP context as described
+   in section 3.1. of [I-D.ietf-core-object-security].  These MUST be
+   included in the COSE_Key as header parameters, as defined in table 1.
+    As suggested in section 3.3 of [I-D.ietf-core-object-security], it
+   is RECOMMENDED that the AS use pseudo-random 64-bit long IDs, so that
+   the probability of collisions is negligible.
+
 
    Note that C should receive the client id as 'sid' and the RS id as
    'rid', while the RS should receive the RS id as 'sid' and the client
@@ -258,9 +272,26 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    |         |       |                |            | recipient in an   |
    |         |       |                |            | OSCOAP context    |
    |         |       |                |            | using this key    |
-   +---------+-------+----------------+------------+-------------------+
+   |         |       |                |            |                   |
+   | kdf     | TBD   | bstr           |            | Identifies the    |
+ 
 
-   	Table 1: Additional common header parameters for COSE_Key 
+
+Seitz, L.               Expires January 1, 2018                 [Page 5]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
+   |         |       |                |            | KDF algorithm in  |
+   |         |       |                |            | an OSCOAP context |
+   |         |       |                |            | using this key    |
+   |         |       |                |            |                   |
+   | slt     | TBD   | bstr           |            | Identifies the    |
+   |         |       |                |            | master salt in    |
+   |         |       |                |            | an OSCOAP context |
+   |         |       |                |            | using this key    |
+   +---------+-------+----------------+------------+-------------------+
+           Table 1: Additional common header parameters for COSE_Key 
 
    Figure 1 shows an example of such an AS response, in CBOR diagnostic
    notation without the tag and value abbreviations.
@@ -274,20 +305,11 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
            "profile" : "coap_oscoap",
            "expires_in" : "3600",
            "cnf" : {
- 
-
-
-Seitz, L.                 Expires May 4, 2017                   [Page 5]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
-
              "COSE_Key" : {
                "kty" : "Symmetric",
-               "kid" : b64'5tOS+h42dkw',
                "alg" : "AES-CCM-16-64-128",
                "sid" : b64'qA',
-               "cid" : b64'Qg',
+               "rid" : b64'Qg',
                "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
              }
            }
@@ -308,38 +330,41 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
          "cnf" : {
            "COSE_Key" : {
              "kty" : "Symmetric",
-             "kid" : b64'5tOS+h42dkw',
+ 
+
+
+Seitz, L.               Expires January 1, 2018                 [Page 6]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
              "alg" : "AES-CCM-16-64-128",
              "sid" : b64'Qg',
-             "cid" : b64'qA',
+             "rid" : b64'qA',
              "k" : b64'+a+Dg2jjU+eIiOFCa9lObw' 
          }
        }
 
           Figure 2: Example CWT with OSCOAP parameters.
 
+2.2.1 Using the pop-key with EDHOC (EDHOC+OSCOAP)
+
    If EDHOC is used together with OSCOAP, and the pop-key (symmetric or
    asymmetric) is used to authenticate the messages in EDHOC, then the
    AS MUST provision the following data, in response to the access token
    request:
 
-      o  a symmetric or asymmetric key (pop-key)
+      o  a symmetric or asymmetric key (associated to the RS) (pop-key)
       o  if the pop-key is symmetric, a key identifier;
 
    How these parameters are communicated depends on the type of key
-   (asymmetric or symmetric).  
+   (asymmetric or symmetric).
 
-   In case of an asymmetric key, C MUST communicate the key to the AS in
- 
-
-
-Seitz, L.                 Expires May 4, 2017                   [Page 6]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
-
-   the 'cnf' parameter of the access token request, as specified in
-   section 6.1 of [I-D.ietf-ace-oauth-authz].
+   In case of an asymmetric key, C MUST communicate its own asymmetric
+   key to the AS in the 'cnf' parameter of the access token request, as
+   specified in section 5.5.1 of [I-D.ietf-ace-oauth-authz].  Note that
+   the key, sent by the AS in response to the access token request, is
+   associated to the RS.
 
    Figure 3 shows an example of such a request in CBOR diagnostic
    notation without tag and value abbreviations.
@@ -361,16 +386,24 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
         }
       }
 
+ 
+
+
+Seitz, L.               Expires January 1, 2018                 [Page 7]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
      Figure 3: Example access token request with asymmetric pop key.
 
 
    In the case of a symmetric key, the AS MUST communicate the key to
    the client in the 'cnf' parameter of the access token response, as
-   specified in section 6.2. of [I-D.ietf-ace-oauth-authz].   AS MUST
+   specified in section 5.5.2. of [I-D.ietf-ace-oauth-authz].   AS MUST
    also select a key identifier, that MUST be included as the 'kid'
    parameter either directly in the 'cnf' structure, as in figure 4 of
    [I-D.ietf-ace-oauth-authz], or as the 'kid' parameter of the
-   COSE_key, as in figure 3 of [I-D.ietf-ace-oauth-authz].
+   COSE_key, as in figure 6 of [I-D.ietf-ace-oauth-authz].
 
    Figure 4 shows an example of the necessary parameters in the AS
    response to the access token request when EDHOC is used.  The example
@@ -386,14 +419,6 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
            "expires_in" : "3600",
            "cnf" : {
              "COSE_Key" : {
- 
-
-
-Seitz, L.                 Expires May 4, 2017                   [Page 7]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
-
                "kty" : "Symmetric",
                "kid" : b64'5tOS+h42dkw',
                "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
@@ -417,6 +442,14 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
          "aud" : "tempSensorInLivingRoom",
          "iat" : "1360189224",
          "exp" : "1360289224",
+ 
+
+
+Seitz, L.               Expires January 1, 2018                 [Page 8]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
          "scope" :  "temperature_g firmware_p",
          "cnf" : {
            "COSE_Key" : {
@@ -429,49 +462,50 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
          Figure 5: Example CWT with EDHOC+OSCOAP parameters.
 
    All other parameters defining OSCOAP security context are derived
-   from EDHOC message exchange, including the base_key (see Appendix B
-   of [I-D.ietf-core-object-security]).
+   from EDHOC message exchange, including the master secret (see
+   Appendix C.2 of [I-D.selander-ace-cose-ecdhe]).
 
    To provide forward secrecy and mutual authentication in the case of
    pre-shared keys, pre-established raw public keys or with X.509
    certificates it is RECOMMENDED to use EDHOC [I-D.selander-ace-cose-
    ecdhe] to generate the keying material.  EDHOC MUST be used as
-   defined in Appendix B, with the following additions and
+   defined in Appendix C, with the following additions and
    modifications.
 
    The first CoAP message is sent to the RS using the /authz-info
-   endpoint as specified in section 8.1 of the ACE framework. This
-   message MUST carry message_1 of the EDHOC protocol (section 4.1.1. if
- 
-
-
-Seitz, L.                 Expires May 4, 2017                   [Page 8]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
-
-   asymmetric keys are used or 5.1.1. if symmetric keys are used of [I-
+   endpoint as specified in section 5.7.1 of the ACE framework. This
+   message MUST carry message_1 of the EDHOC protocol (section 4.2. if
+   asymmetric keys are used or 5.2. if symmetric keys are used of [I-
    D.selander-ace-cose-ecdhe]) in the CoAP payload, and the access token
-   MUST be added to the message_1 CBOR map, with the label
-   'access_token' (Figure 11 of [I-D.ietf-ace-oauth-authz]).  An example
-   can be seen in the first message (POST) of Figure 1.
+   MUST be added to the message_1 APP_1 as an element in a serialized
+   CBOR map, with the label 'access_token' (Figure 11 of [I-D.ietf-ace-
+   oauth-authz]).  An example can be seen in the first message (POST) of
+   Figure 1.
 
    Before the RS continues with the EDHOC protocol and responds to this
    token submission request, additional verifications on the access
    token are done: the RS SHALL process the access token according to
    [I-D.ietf-ace-oauth-authz].  If the token is valid then the RS
-   continues processing EDHOC following Appendix B of [I-D.selander-ace-
+   continues processing EDHOC following Appendix C of [I-D.selander-ace-
    cose-ecdhe], else it discontinues EDHOC and responds with the error
    code as specified in [I-D.ietf-ace-oauth-authz].
 
    When the RS receives an OSCOAP message including a field with label
    'edhoc_m3' in the unprotected Headers of the COSE object, it SHALL
-   follow the process described in Appendix B of [I-D.selander-ace-cose-
+   follow the process described in Appendix C of [I-D.selander-ace-cose-
    ecdhe].  If the OSCOAP message was valid, the RS SHALL also verify
    that the client is authorized to perform the requested action on the
    requested resource using the previously received access token. 
 
       o  In case the EDHOC verification fails, the RS MUST return an
+ 
+
+
+Seitz, L.               Expires January 1, 2018                 [Page 9]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
    error response to the client with code 4.01 (Unauthorized).
 
       o  If RS has an access token for C but not for the resource that C
@@ -489,22 +523,15 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    in section 5 of [I-D.selander-ace-cose-ecdhe] MUST be used.  If the
    pop-key is asymmetric, the RS MUST also use an asymmetric key for
    authentication.  This key is known to the client through the access
-   token response (see section 6.2 of the ACE framework).  In this case
-   the protocol in section 4 of [I-D.selander-ace-cose-ecdhe] MUST be
-   used.
+   token response (see section 5.5.2 of the ACE framework).  In this
+   case the protocol in section 4 of [I-D.selander-ace-cose-ecdhe] MUST
+   be used.
 
    Note that if the OSCOAP profile is used, the /authz-info endpoint at
    the Resource Server MUST be prepared to process and generate the
    protocol messages of the EDHOC protocol as specified above.  Hence
    the use of EDHOC does not add any additional roundtrips to the ACE
    message exchange.
- 
-
-
-Seitz, L.                 Expires May 4, 2017                   [Page 9]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
 
      Figure 6 illustrates the message exchanges for using EDHOC on the
    /authz-info endpoint (step C in figure 1 of [I-D.ietf-ace-oauth-
@@ -527,6 +554,14 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
                |          |
                +--------->| CoAP request +
                |  OSCOAP  | Object-Security option
+ 
+
+
+Seitz, L.               Expires January 1, 2018                [Page 10]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
                | request  | COSE_Encrypt0:
                |          |  unprotected Header: EDHOC message_3
                |          |
@@ -540,39 +575,71 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    Figure 7 shows an example of message_1 with an access token embedded
    in the unprotected header.
 
-        {
-        'N_U' : h'5598a57b47db7f2c',
-        'E_U' : h'a120a50102024478f679012001215
-                  82098f50a4ff6c05861c8860d13a6
-                  38ea56c3f5ad7590bbfbf054e1c7b
-                  4d91d628022f5',		# COSE_Key
-        'ALG_U' : [
-            [ -27 ],			# ECDH-SS + HKDF-256
-            [ 12 ], 			# AES-CCM-64-64-128
-            [ -7 ], 			# ES256
-            [ 4 ] 			# HMAC 256/64
-            ],
-        18 : h'4a5015df6864286979'
-        } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
-Seitz, L.                 Expires May 4, 2017                  [Page 10]
+Seitz, L.               Expires January 1, 2018                [Page 11]
 
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
 
+
+        [
+          1,                            # message type
+          h'05c2dc'                     # session identifier
+          h'5598a57b47db7f2c',          # random nonce
+          h'a120a50102024478f679012001215
+            82098f50a4ff6c05861c8860d13a6
+            38ea56c3f5ad7590bbfbf054e1c7b
+            4d91d628022f5',             # COSE_Key
+          [1]                           # NIST P-256
+          [ -27 ],                      # ECDH-SS + HKDF-256
+          [ 12 ],                       # AES-CCM-64-64-128
+          [ -7 ],                       # ES256
+          [ -7 ],                       # ES256
+          h'a16c6163636573735f746f6b656e # APP_3: access token
+            ...
+        ] 
 
    Figure 7: diagnostic notation of EDHOC message_1 with an access token
 
-   N_U, E_U, and ALG_U, as defined in [I-D.selander-ace-cose-ecdhe], are
-   the freshness nonce for party U, the ECDH ephemeral public keys of
-   party U, and the proposed set of algorithms to be negotiated,
-   respectively.
-
-
 3. Client to Authorization Server
 
-   As specified in the ACE framework section 5 [I-D.ietf-ace-oauth-
+   As specified in the ACE framework section 5.5 [I-D.ietf-ace-oauth-
    authz], the Client and AS can also use CoAP instead of HTTP to
    communicate via the token endpoint.  This section specifies how to
    use OSCOAP between Client and AS together with CoAP.  The use of
@@ -583,8 +650,8 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    credentials (e.g. raw public keys).  How these credentials are
    established is out of scope for this profile.  Furthermore the client
    and the AS communicate using CoAP through the token endpoint as
-   specified in section 6 of [I-D.ietf-ace-oauth-authz].  At first point
-   of contact, prior to making the token request and response, the
+   specified in section 5.5 of [I-D.ietf-ace-oauth-authz].  At first
+   point of contact, prior to making the token request and response, the
    client and the AS MAY perform an EDHOC exchange with the pre-
    established credentials to create forward secret keying material for
    use with OSCOAP.  Subsequent requests and the responses MUST be
@@ -593,29 +660,29 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
 
 4. Resource Server to Authorization Server
 
-   As specified in the ACE framework section 5 [I-D.ietf-ace-oauth-
+   As specified in the ACE framework section 5.6 [I-D.ietf-ace-oauth-
    authz], the RS and AS can also use CoAP instead of HTTP to
    communicate via the introspection endpoint.  This section specifies
    how to use OSCOAP between RS and AS together with CoAP.  The use of
    OSCOAP for this communication is OPTIONAL in this profile, other
    security protocols (such as DTLS) MAY be used instead.
+ 
+
+
+Seitz, L.               Expires January 1, 2018                [Page 12]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
 
    The RS and the AS are expected to have pre-established credentials
    (e.g. symmetric keys).  How these credentials are established is out
    of scope for this profile.  Furthermore the RS and the AS communicate
    using CoAP through the introspection endpoint as specified in section
-   7 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior to
-   making the introspection request and response, the RS and the AS MAY
-   perform an EDHOC exchange with the pre-established credentials to
+   5.6 of [I-D.ietf-ace-oauth-authz].  At first point of contact, prior
+   to making the introspection request and response, the RS and the AS
+   MAY perform an EDHOC exchange with the pre-established credentials to
    create forward secret keying material for use with OSCOAP. 
    Subsequent requests and the responses MUST be protected with OSCOAP.
-
- 
-
-
-Seitz, L.                 Expires May 4, 2017                  [Page 11]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
 
 
 5. Security Considerations
@@ -630,15 +697,16 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
 
 7.  IANA Considerations 
 
-   TBD. 'coap_oscoap' as profile id. Header parameters 'sid' and 'rid'
-   for COSE_Key.
+   TBD. 'coap_oscoap' as profile id. Header parameters 'sid', 'rid',
+   'kdf' and 'slt' for COSE_Key.
 
 
-8.  Acknowledgements
+8.  Acknowledgments
 
-   The author wishes to thank Goeran Selander for the input on this
-   memo.  The error responses specified in section 2.2. were originally
-   specified by Gerdes et al. in [I-D.gerdes-ace-dcaf-authorize].
+   The author wishes to thank Goeran Selander and Marco Tiloca for the
+   input on this memo.  The error responses specified in section 2.2.
+   were originally specified by Gerdes et al. in [I-D.gerdes-ace-dcaf-
+   authorize].
 
 
 9.  References
@@ -648,54 +716,43 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
    [I-D.ietf-core-object-security]
               Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
               "Object Security of CoAP (OSCOAP)", draft-ietf-core-
-              object-security-00 (work in progress), October 2016.
+              object-security-02 (work in progress), March 2017.
 
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
-              cose-ecdhe-04 (work in progress), October 2016.
+              cose-ecdhe-06 (work in progress), April 2017.
+ 
+
+
+Seitz, L.               Expires January 1, 2018                [Page 13]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
 
    [I-D.ietf-cose-msg]
               Schaad, J., "CBOR Object Signing and Encryption (COSE)",
-              draft-ietf-cose-msg-23 (work in progress), October 2016.
+              draft-ietf-cose-msg-24 (work in progress), November 2016.
 
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtmann, S., and
               H. Tschofenig. "Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-04 (work in progress), October 2016.
+              authz-06 (work in progress), March 2017.
 
-   [I-D.ietf-ace-cbor-web-token] Wahlstroem, E., Jones, M., Tschofenig,
- 
-
-
-Seitz, L.                 Expires May 4, 2017                  [Page 12]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
-
-              H., and S. Erdtman. "CBOR Web Token (CWT)", draft-ietf-
-              ace-cbor-web-token-01 (work in progress), July 2016.
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI
-              10.17487/RFC2119, March 1997, <http://www.rfc-
-              editor.org/info/rfc2119>.
-
-   [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
-              Application Protocol (CoAP)", RFC 7252, DOI
-              10.17487/RFC7252, June 2014, <http://www.rfc-
-              editor.org/info/rfc7252>.
+   [I-D.ietf-ace-cbor-web-token] Jones, M., Wahlstroem, E., Erdtman S.
+              and H. Tschofenig. "CBOR Web Token (CWT)", draft-ietf-ace-
+              cbor-web-token-04 (work in progress), April 2017.
 
 
 
 9.2  Informative References
 
-   [I-D.gerdes-ace-actors]
+   [I-D.ietf-ace-actors]
               Gerdes, S., Seitz, L., Selander, G., and C. Bormann (ed).
-              "An Arhitecture for Authorization in Constrained
-              Environments", draft-ietf-ace-actors-03 (work in
-              progress), March 2016. 
+              "An Architecture for Authorization in Constrained
+              Environments", draft-ietf-ace-actors-05 (work in
+              progress), March 2017. 
 
    [I-D.gerdes-ace-dcaf-authorize]
               Gerdes, S., Bergmann, O., Bormann C. "Delegated CoAP
@@ -703,41 +760,32 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
               gerdes-ace-dcaf-authorize-04 (work in progress), October
               2015.
 
-   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", FYI
-              36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
-              <http://www.rfc-editor.org/info/rfc4949>.
-
-   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
-              RFC 6749, DOI 10.17487/RFC6749, October 2012,
-              <http://www.rfc-editor.org/info/rfc6749>.
-
-   [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
-              Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
-              October 2013, <http://www.rfc-editor.org/info/rfc7049>.
-
-   [RFC7231]  Fielding, R., Ed., and J. Reschke, Ed., "Hypertext
-              Transfer Protocol (HTTP/1.1): Semantics and Content",
-              RFC 7231, DOI 10.17487/RFC7231, June 2014,
-              <http://www.rfc-editor.org/info/rfc7231>.
-
 
 Author's Address
- 
-
-
-Seitz, L.                 Expires May 4, 2017                  [Page 13]
-
-INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
-
 
               Ludwig Seitz
-              SICS Swedish ICT AB
+              RISE SICS AB
               Scheelevagen 17
               22370 Lund
               SWEDEN
-              EMail: ludwig@sics.se
+              EMail: ludwig.seitz@ri.se
+
+              Martin Gunnarsson
+              RISE SICS AB
+              Scheelevagen 17
+              22370 Lund
+              SWEDEN
+              EMail: martin.gunnarsson@ri.se
 
               Francesca Palombini
+ 
+
+
+Seitz, L.               Expires January 1, 2018                [Page 14]
+
+INTERNET DRAFT           OSCOAP profile of ACE             June 30, 2017
+
+
               Ericsson AB
               Farogatan 6
               SE-16480 Stockholm
@@ -781,4 +829,12 @@ INTERNET DRAFT           OSCOAP profile of ACE          October 31, 2016
 
 
 
-Seitz, L.                 Expires May 4, 2017                  [Page 14]
+
+
+
+
+
+
+
+
+Seitz, L.               Expires January 1, 2018                [Page 15]

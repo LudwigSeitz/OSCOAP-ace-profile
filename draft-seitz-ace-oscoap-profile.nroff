@@ -7,9 +7,9 @@
 .ds LF Seitz, L.
 .ds RF FORMFEED[Page %]
 .ds LH INTERNET DRAFT
-.ds RH May 3, 2017
+.ds RH June 30, 2017
 .ds CH OSCOAP profile of ACE
-.ds CF Expires November 4, 2017
+.ds CF Expires January 1, 2018
 .hy 0
 .nh
 .ad l
@@ -19,9 +19,9 @@
 .tl 'ACE Working Group''L. Seitz'
 .tl 'Internet-Draft''M. Gunnarsson'
 .tl 'Intended Status: Standards Track''RISE SICS AB'
-.tl 'Expires: November 4, 2017''F. Palombini'
+.tl 'Expires: January 1, 2018''F. Palombini'
 .tl '''Ericsson AB'
-.tl '''May 3, 2017'
+.tl '''June 30, 2017'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -36,7 +36,7 @@
 
 .ce 2
 OSCOAP profile of ACE
-draft-seitz-ace-oscoap-profile-02
+draft-seitz-ace-oscoap-profile-03
 .fi
 
 
@@ -82,15 +82,17 @@ Table of Contents
    2. Client to Resource Server . . . . . . . . . . . . . . . . . . .  4
      2.1. Signaling the use of OSCOAP . . . . . . . . . . . . . . . .  4
      2.2. Key establishment for OSCOAP  . . . . . . . . . . . . . . .  4
-   3. Client to Authorization Server  . . . . . . . . . . . . . . . . 11
-   4. Resource Server to Authorization Server . . . . . . . . . . . . 11
-   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 12
-   6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 12
-   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
-   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 12
-   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 12
-     9.1  Normative References  . . . . . . . . . . . . . . . . . . . 12
-     9.2  Informative References  . . . . . . . . . . . . . . . . . . 13
+       2.2.1 Using the pop-key with OSCOAP directly (OSCOAP)  . . . .  4
+       2.2.1 Using the pop-key with EDHOC (EDHOC+OSCOAP)  . . . . . .  7
+   3. Client to Authorization Server  . . . . . . . . . . . . . . . . 12
+   4. Resource Server to Authorization Server . . . . . . . . . . . . 12
+   5. Security Considerations . . . . . . . . . . . . . . . . . . . . 13
+   6. Privacy Considerations  . . . . . . . . . . . . . . . . . . . . 13
+   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 13
+   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 13
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+     9.1  Normative References  . . . . . . . . . . . . . . . . . . . 13
+     9.2  Informative References  . . . . . . . . . . . . . . . . . . 14
    Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 14
 .fi
 .in 3
@@ -141,21 +143,30 @@ Note the the client and the authorization server MAY OPTIONALLY use OSCOAP to pr
 
 Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to derive a security context based on a symmetric master secret and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as master secret in OSCOAP.  Alternatively the pop-key (symmetric or asymmetric) MAY be used to authenticate the messages in the key exchange protocol EDHOC [I-D.selander-ace-cose-ecdhe], from which a master secret is derived.
 
+.ti 0
+2.2.1 Using the pop-key with OSCOAP directly (OSCOAP)
+
 If OSCOAP is used directly with the symmetric pop-key as master secret, then the AS MUST provision the following data, in response to the access token request:
 
 .ti 6
 o  a symmetric key (pop-key)
 .ti 6
-o  an AEAD algorithm
-.ti 6
-o  a KDF algorithm
-.ti 6
 o  the sender identifier
 .ti 6
 o  the recipient identifier
 
-The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The AEAD algorithm MUST be included as the 'alg' parameter of the COSE_key.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
-The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.
+Additionally, the AS MAY provision the following data, in the same response.  In case these parameters are omitted, the default values are used as described in section 3.2. of [I-D.ietf-core-object-security].
+
+.ti 6
+o  an AEAD algorithm
+.ti 6
+o  a KDF algorithm
+.ti 6
+o  a salt
+
+The pop-key MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of [I-D.ietf-ace-oauth-authz].  The AEAD algorithm MAY be included as the 'alg' parameter in the COSE_Key; the KDF algorithm MAY be included as the 'kdf' parameter of the COSE_Key and the salt MAY be included as the 'slt' parameter of the COSE_Key as defined in table 1.  The same parameters MUST be included as metadata of the access token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.
+The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1. of [I-D.ietf-core-object-security].  These MUST be included in the COSE_Key as header parameters, as defined in table 1.  As suggested in section 3.3 of [I-D.ietf-core-object-security], it is RECOMMENDED that the AS use pseudo-random 64-bit long IDs, so that the probability of collisions is negligible.
+
 
 Note that C should receive the client id as 'sid' and the RS id as 'rid', while the RS should receive the RS id as 'sid' and the client id as 'rid'.
  
@@ -172,8 +183,17 @@ Note that C should receive the client id as 'sid' and the RS id as 'rid', while 
 |         |       |                |            | recipient in an   |
 |         |       |                |            | OSCOAP context    |
 |         |       |                |            | using this key    |
+|         |       |                |            |                   |
+| kdf     | TBD   | bstr           |            | Identifies the    |
+|         |       |                |            | KDF algorithm in  |
+|         |       |                |            | an OSCOAP context |
+|         |       |                |            | using this key    |
+|         |       |                |            |                   |
+| slt     | TBD   | bstr           |            | Identifies the    |
+|         |       |                |            | master salt in    |
+|         |       |                |            | an OSCOAP context |
+|         |       |                |            | using this key    |
 +---------+-------+----------------+------------+-------------------+
-
         Table 1: Additional common header parameters for COSE_Key 
 .fi
 
@@ -225,16 +245,19 @@ tag and value abbreviations.
        Figure 2: Example CWT with OSCOAP parameters.
 .fi
 
+.ti 0
+2.2.1 Using the pop-key with EDHOC (EDHOC+OSCOAP)
+
 If EDHOC is used together with OSCOAP, and the pop-key (symmetric or asymmetric) is used to authenticate the messages in EDHOC, then the AS MUST provision the following data, in response to the access token request:
 
 .ti 6
-o  a symmetric or asymmetric key (pop-key)
+o  a symmetric or asymmetric key (associated to the RS) (pop-key)
 .ti 6
 o  if the pop-key is symmetric, a key identifier;
 
 How these parameters are communicated depends on the type of key (asymmetric or symmetric).
 
-In case of an asymmetric key, C MUST communicate the key to the AS in the 'cnf' parameter of the access token request, as specified in section 5.5.1 of [I-D.ietf-ace-oauth-authz].
+In case of an asymmetric key, C MUST communicate its own asymmetric key to the AS in the 'cnf' parameter of the access token request, as specified in section 5.5.1 of [I-D.ietf-ace-oauth-authz].  Note that the key, sent by the AS in response to the access token request, is associated to the RS.
 
 Figure 3 shows an example of such a request in CBOR diagnostic notation without tag and value abbreviations.
 
@@ -261,7 +284,7 @@ Figure 3 shows an example of such a request in CBOR diagnostic notation without 
 
 
 In the case of a symmetric key, the AS MUST communicate the key to the client in the 'cnf' parameter of the access token response, as specified in
-section 5.5.2. of [I-D.ietf-ace-oauth-authz].   AS MUST also select a key identifier, that MUST be included as the 'kid' parameter either directly in the 'cnf' structure, as in figure 4 of [I-D.ietf-ace-oauth-authz], or as the 'kid' parameter of the COSE_key, as in figure 3 of [I-D.ietf-ace-oauth-authz].
+section 5.5.2. of [I-D.ietf-ace-oauth-authz].   AS MUST also select a key identifier, that MUST be included as the 'kid' parameter either directly in the 'cnf' structure, as in figure 4 of [I-D.ietf-ace-oauth-authz], or as the 'kid' parameter of the COSE_key, as in figure 6 of [I-D.ietf-ace-oauth-authz].
 
 Figure 4 shows an example of the necessary parameters in the AS response to the access token request when EDHOC is used.  The example uses CBOR  diagnostic notation without tag and value abbreviations.
 
@@ -421,13 +444,13 @@ TBD.
 .ti 0
 7.  IANA Considerations 
 
-TBD. 'coap_oscoap' as profile id. Header parameters 'sid' and 'rid' for COSE_Key.
+TBD. 'coap_oscoap' as profile id. Header parameters 'sid', 'rid', 'kdf' and 'slt' for COSE_Key.
 
 
 .ti 0
 8.  Acknowledgments
 
-The author wishes to thank Goeran Selander for the input on this memo.  The error responses specified in section 2.2. were originally specified by
+The author wishes to thank Goeran Selander and Marco Tiloca for the input on this memo.  The error responses specified in section 2.2. were originally specified by
 Gerdes et al. in [I-D.gerdes-ace-dcaf-authorize].
 
 
@@ -464,12 +487,6 @@ Jones, M., Wahlstroem, E., Erdtman S. and H. Tschofenig. "CBOR Web Token (CWT)",
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 2119, 7252
-.ti 3
-[RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP\014, RFC\02119, DOI 10.17487/RFC2119, March 1997, <http://www.rfc-editor.org/info/rfc2119>.
-
-.ti 3
-[RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained Application Protocol (CoAP)", RFC\07252, DOI 10.17487/RFC7252, June 2014, <http://www.rfc-editor.org/info/rfc7252>.
-
 .\" \# ERF -- End of managed reference list
 .\" ----------------------------------------
 .\" The reference list can be changed at any time by altering the RFC list in the line below the .\" \# REF directive
@@ -495,18 +512,6 @@ Gerdes, S., Bergmann, O., Bormann C. "Delegated CoAP Authentication and Authoriz
 
 .\" \# REF  -- Managed reference list. Syntax: [RFC]nnnn[;Label], ... ,[RFC]nnnn[;Label]
 .\" \# 4949, 6749, 7049, 7231
-.ti 3
-[RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", FYI 36, RFC\04949, DOI 10.17487/RFC4949, August 2007, <http://www.rfc-editor.org/info/rfc4949>.
-
-.ti 3
-[RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework", RFC\06749, DOI 10.17487/RFC6749, October 2012, <http://www.rfc-editor.org/info/rfc6749>.
-
-.ti 3
-[RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object Representation (CBOR)", RFC\07049, DOI 10.17487/RFC7049, October 2013, <http://www.rfc-editor.org/info/rfc7049>.
-
-.ti 3
-[RFC7231]  Fielding, R., Ed., and J. Reschke, Ed., "Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content", RFC\07231, DOI 10.17487/RFC7231, June 2014, <http://www.rfc-editor.org/info/rfc7231>.
-
 .\" \# ERF -- End of managed reference list
 
 .ti 0

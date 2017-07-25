@@ -432,7 +432,7 @@
             </t>
             
             <t>
-              The first EDHOC message is sent after the access token is posted to the /authz-info endpoint of the RS as specified in section 5.7.1 of, as defined in <xref target="I-D.ietf-ace-oauth-authz"/>. Then the EDHOC message_1 is sent and the EDHOC protocol is initiated <xref target="I-D.selander-ace-cose-ecdhe"/>).
+              The first EDHOC message is sent after the access token is posted to the /authz-info endpoint of the RS as specified in section 5.7.1 of <xref target="I-D.ietf-ace-oauth-authz"/>. Then the EDHOC message_1 is sent and the EDHOC protocol is initiated <xref target="I-D.selander-ace-cose-ecdhe"/>).
             </t>
             
             <t>

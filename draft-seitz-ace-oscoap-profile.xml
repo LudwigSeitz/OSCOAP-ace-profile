@@ -289,7 +289,7 @@
 
           <t>
             <list style="symbols">
-              <t>a symmetric or asymmetric key (associated to the RS)</t>
+              <t>a symmetric or public key (associated to the RS)</t>
               <t>a key identifier;</t>
             </list>
           </t>

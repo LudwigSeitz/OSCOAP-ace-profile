@@ -345,10 +345,10 @@
       Payload:
       {
         "access_token" : b64'SlAV32hkKG ...
-         (contains "kid" : "server_key")',
+         (contains "kid" : "client_key")',
         "profile" : "coap_oscoap_edhoc",
         "expires_in" : "3600",
-        "rs_cnf" : {
+        "cnf" : {
           "COSE_Key" : {
             "kid" : "server_key"
             "kty" : "EC",

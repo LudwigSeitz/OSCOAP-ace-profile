@@ -428,7 +428,7 @@
           <section title="Processing">
             
             <t>
-              To provide forward secrecy and mutual authentication in the case of pre-shared keys, pre-established raw public keys or with X.509 certificates it is RECOMMENDED to use EDHOC <xref target="I-D.selander-ace-cose-ecdhe"/> to generate the keying material.  EDHOC MUST be used as defined in Appendix C, with the following additions and modifications.
+              To provide forward secrecy and mutual authentication in the case of pre-shared keys, pre-established raw public keys or with X.509 certificates it is RECOMMENDED to use EDHOC <xref target="I-D.selander-ace-cose-ecdhe"/> to generate the keying material.  EDHOC MUST be used as defined in Appendix C of <xref target="I-D.selander-ace-cose-ecdhe"/>, with the following additions and modifications.
             </t>
             
             <t>

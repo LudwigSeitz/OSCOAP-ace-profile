@@ -150,56 +150,54 @@
       
       </section> <!-- ends from line 133-->
 
-      <section title="Key establishment for OSCOAP"> 
+      <section anchor="oscoap-only" title="Key establishment for OSCOAP"> 
 
         <t>
           Section 3.2 of OSCOAP <xref target="I-D.ietf-core-object-security"/> defines how to derive a security context based on a shared master secret and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as master secret in OSCOAP.
         </t>
 
-        <section anchor="oscoap-only" title="Using the pop-key with OSCOAP directly (OSCOAP)">
+        <t>
+          If OSCOAP is used directly with the symmetric pop-key as master secret, then the AS MUST provision the following data, in response to the access token request:
+          <!-- 
+            Jim: this is not really a POP key, it is a shared secret and not even a symmetric key 
+          
+          in the list below? (fixed) or in the paragraph above?
+          -->
+        </t>
 
-          <t>
-            If OSCOAP is used directly with the symmetric pop-key as master secret, then the AS MUST provision the following data, in response to the access token request:
-            <!-- 
-              Jim: this is not really a POP key, it is a shared secret and not even a symmetric key 
-            
-            in the list below? (fixed) or in the paragraph above?
-            -->
-          </t>
+        <t>
+          <list style="symbols">
+            <t> a master secret</t>
+            <t>the sender identifier</t>
+            <t>the recipient identifier</t>
+          </list>
+        </t>
 
-          <t>
-            <list style="symbols">
-              <t> a master secret</t>
-              <t>the sender identifier</t>
-              <t>the recipient identifier</t>
-            </list>
-          </t>
+        <t>
+          Additionally, the AS MAY provision the following data, in the same response.  In case these parameters are omitted, the default values are used as described in section 3.2 of <xref target="I-D.ietf-core-object-security"/>.
+        </t>
 
-          <t>
-            Additionally, the AS MAY provision the following data, in the same response.  In case these parameters are omitted, the default values are used as described in section 3.2 of <xref target="I-D.ietf-core-object-security"/>.
-          </t>
+        <t>
+          <list style="symbols">
+            <t>an AEAD algorithm</t>
+            <t>a KDF algorithm</t>
+            <t>a salt</t>
+            <t>a replay window type and size</t>
+          </list>
+        </t>
 
-          <t>
-            <list style="symbols">
-              <t>an AEAD algorithm</t>
-              <t>a KDF algorithm</t>
-              <t>a salt</t>
-              <t>a replay window type and size</t>
-            </list>
-          </t>
+        <t>
+          The master secret MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of <xref target="I-D.ietf-ace-oauth-authz"/>.  The AEAD algorithm MAY be included as the 'alg' parameter in the COSE_Key; the KDF algorithm MAY be included as the 'kdf' parameter of the COSE_Key and the salt MAY be included as the 'slt' parameter of the COSE_Key as defined in table 1.  The same parameters MUST be included as metadata of the access token, if the token is a CWT <xref target="I-D.ietf-ace-cbor-web-token"/>, the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.  The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1 of <xref target="I-D.ietf-core-object-security"/>.  These identifiers MUST be unique in the set of all clients and RS identifiers for a certain AS.  Moreover, these MUST be included in the COSE_Key as header parameters, as defined in table 1.
+        </t>
 
-          <t>
-            The master secret MUST be communicated as COSE_Key in the 'cnf' parameter of the access token response as defined in section 5.5.4.5 of <xref target="I-D.ietf-ace-oauth-authz"/>.  The AEAD algorithm MAY be included as the 'alg' parameter in the COSE_Key; the KDF algorithm MAY be included as the 'kdf' parameter of the COSE_Key and the salt MAY be included as the 'slt' parameter of the COSE_Key as defined in table 1.  The same parameters MUST be included as metadata of the access token, if the token is a CWT <xref target="I-D.ietf-ace-cbor-web-token"/>, the same COSE_Key structure MUST be placed in the 'cnf' claim of this token.  The AS MUST also assign identifiers to both client and RS, which are then used as Sender ID and Recipient ID in the OSCOAP context as described in section 3.1 of <xref target="I-D.ietf-core-object-security"/>.  These identifiers MUST be unique in the set of all clients and RS identifiers for a certain AS.  Moreover, these MUST be included in the COSE_Key as header parameters, as defined in table 1.
-          </t>
+        <t>
+          We assume in this document that a resource is associated to one single AS, which makes it possible to assume unique identifiers for each client requesting a particular resource to a RS.  If this is not the case, collisions of identifiers may appear in the RS, in which case the RS needs to have a mechanism in place to disambiguate identifiers or mitigate their effect.
+          <!-- Add error response definition in the document for the RS to indicate "Id collision"-->
+        </t>
 
-          <t>
-            We assume in this document that a resource is associated to one single AS, which makes it possible to assume unique identifiers for each client requesting a particular resource to a RS.  If this is not the case, collisions of identifiers may appear in the RS, in which case the RS needs to have a mechanism in place to disambiguate identifiers or mitigate their effect.
-            <!-- Add error response definition in the document for the RS to indicate "Id collision"-->
-          </t>
-
-          <t>
-            Note that C should set the Sender ID of its security context to the clientId value received and the Recipient ID to the serverId value, and RS should do the opposite.
-          </t>
+        <t>
+          Note that C should set the Sender ID of its security context to the clientId value received and the Recipient ID to the serverId value, and RS should do the opposite.
+        </t>
 
 <figure><artwork><![CDATA[
 +----------+-------+----------------+------------+-------------------+
@@ -225,61 +223,59 @@
 |          |       |                |            | an OSCOAP context |
 |          |       |                |            | using this key    |
 +----------+-------+----------------+------------+-------------------+
-        Table 1: Additional common header parameters for COSE_Key
+      Table 1: Additional common header parameters for COSE_Key
 
 ]]></artwork></figure>
 
-          <t>
-            Figure 1 shows an example of such an AS response, in CBOR diagnostic notation without the tag and value abbreviations.
-          </t>
+        <t>
+          Figure 1 shows an example of such an AS response, in CBOR diagnostic notation without the tag and value abbreviations.
+        </t>
 
 <figure><artwork><![CDATA[
-      Header: Created (Code=2.01)
-      Content-Type: "application/cose+cbor"
-      Payload:
-      {
-        "access_token" : b64'SlAV32hkKG ...
-         (remainder of access token omitted for brevity)',
-        "profile" : "coap_oscoap",
-        "expires_in" : "3600",
-        "cnf" : {
-          "COSE_Key" : {
-            "kty" : "Symmetric",
-            "alg" : "AES-CCM-16-64-128",
-            "clientId" : b64'qA',
-            "serverId" : b64'Qg',
-            "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
-          }
-        }
-      }
-
-      Figure 1: Example AS response with OSCOAP parameters.
-]]></artwork></figure>
-
-          <t>
-            Figure 2 shows an example CWT, containing the necessary OSCOAP parameters in the 'cnf' claim, in CBOR diagnostic notation without tag and value abbreviations.
-          </t>
-
-<figure><artwork><![CDATA[
+    Header: Created (Code=2.01)
+    Content-Type: "application/cose+cbor"
+    Payload:
     {
-      "aud" : "tempSensorInLivingRoom",
-      "iat" : "1360189224",
-      "exp" : "1360289224",
-      "scope" :  "temperature_g firmware_p",
+      "access_token" : b64'SlAV32hkKG ...
+       (remainder of access token omitted for brevity)',
+      "profile" : "coap_oscoap",
+      "expires_in" : "3600",
       "cnf" : {
         "COSE_Key" : {
           "kty" : "Symmetric",
           "alg" : "AES-CCM-16-64-128",
-          "clientId" : b64'Qg',
-          "serverId" : b64'qA',
-          "k" : b64'+a+Dg2jjU+eIiOFCa9lObw' 
+          "clientId" : b64'qA',
+          "serverId" : b64'Qg',
+          "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
+        }
       }
     }
 
-       Figure 2: Example CWT with OSCOAP parameters.
+    Figure 1: Example AS response with OSCOAP parameters.
 ]]></artwork></figure>
 
-        </section> <!-- ends for line 159 -->
+        <t>
+          Figure 2 shows an example CWT, containing the necessary OSCOAP parameters in the 'cnf' claim, in CBOR diagnostic notation without tag and value abbreviations.
+        </t>
+
+<figure><artwork><![CDATA[
+  {
+    "aud" : "tempSensorInLivingRoom",
+    "iat" : "1360189224",
+    "exp" : "1360289224",
+    "scope" :  "temperature_g firmware_p",
+    "cnf" : {
+      "COSE_Key" : {
+        "kty" : "Symmetric",
+        "alg" : "AES-CCM-16-64-128",
+        "clientId" : b64'Qg',
+        "serverId" : b64'qA',
+        "k" : b64'+a+Dg2jjU+eIiOFCa9lObw' 
+    }
+  }
+
+     Figure 2: Example CWT with OSCOAP parameters.
+]]></artwork></figure>
 
       </section> <!-- ends for line 153-->
 

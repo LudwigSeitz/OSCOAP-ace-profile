@@ -70,14 +70,13 @@ Table of Contents
    2.  Client to Resource Server . . . . . . . . . . . . . . . . . .   3
      2.1.  Signaling the use of OSCOAP . . . . . . . . . . . . . . .   3
      2.2.  Key establishment for OSCOAP  . . . . . . . . . . . . . .   4
-       2.2.1.  Using the pop-key with OSCOAP directly (OSCOAP) . . .   4
-     2.3.  Client to Authorization Server  . . . . . . . . . . . . .   7
+     2.3.  Client to Authorization Server  . . . . . . . . . . . . .   6
    3.  Resource Server to Authorization Server . . . . . . . . . . .   7
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    5.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
      7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)  . . . .   9
      A.1.  Using Asymmetric Keys . . . . . . . . . . . . . . . . . .  10
@@ -102,6 +101,7 @@ Table of Contents
    [RFC8152] to secure CoAP messages.  In order to provide replay and
    reordering protection OSCOAP also introduces sequence numbers that
    are used together with COSE.
+
 
 
 
@@ -170,8 +170,8 @@ Seitz, et al.             Expires April 7, 2018                 [Page 3]
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
-   servers for which this access token is valid, and follow
-   Section 2.2.1 to derive the security context to run OSCOAP.
+   servers for which this access token is valid, and follow Section 2.2
+   to derive the security context to run OSCOAP.
 
    The error response procedures defined in section 5.5.3 of the ACE
    framework are unchanged by this profile.
@@ -187,8 +187,6 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
    other parameters, established between client and server.  The proof-
    of-possession key (pop-key) provisioned from the AS MAY, in case of
    pre-shared keys, be used directly as master secret in OSCOAP.
-
-2.2.1.  Using the pop-key with OSCOAP directly (OSCOAP)
 
    If OSCOAP is used directly with the symmetric pop-key as master
    secret, then the AS MUST provision the following data, in response to
@@ -218,6 +216,8 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
    of [I-D.ietf-ace-oauth-authz].  The AEAD algorithm MAY be included as
    the 'alg' parameter in the COSE_Key; the KDF algorithm MAY be
    included as the 'kdf' parameter of the COSE_Key and the salt MAY be
+   included as the 'slt' parameter of the COSE_Key as defined in table
+   1.  The same parameters MUST be included as metadata of the access
 
 
 
@@ -226,8 +226,6 @@ Seitz, et al.             Expires April 7, 2018                 [Page 4]
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
-   included as the 'slt' parameter of the COSE_Key as defined in table
-   1.  The same parameters MUST be included as metadata of the access
    token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same
    COSE_Key structure MUST be placed in the 'cnf' claim of this token.
    The AS MUST also assign identifiers to both client and RS, which are
@@ -271,9 +269,11 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
   |          |       |                |            | an OSCOAP context |
   |          |       |                |            | using this key    |
   +----------+-------+----------------+------------+-------------------+
-          Table 1: Additional common header parameters for COSE_Key
+        Table 1: Additional common header parameters for COSE_Key
 
 
+   Figure 1 shows an example of such an AS response, in CBOR diagnostic
+   notation without the tag and value abbreviations.
 
 
 
@@ -282,54 +282,54 @@ Seitz, et al.             Expires April 7, 2018                 [Page 5]
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
-   Figure 1 shows an example of such an AS response, in CBOR diagnostic
-   notation without the tag and value abbreviations.
-
-         Header: Created (Code=2.01)
-         Content-Type: "application/cose+cbor"
-         Payload:
-         {
-           "access_token" : b64'SlAV32hkKG ...
-            (remainder of access token omitted for brevity)',
-           "profile" : "coap_oscoap",
-           "expires_in" : "3600",
-           "cnf" : {
-             "COSE_Key" : {
-               "kty" : "Symmetric",
-               "alg" : "AES-CCM-16-64-128",
-               "clientId" : b64'qA',
-               "serverId" : b64'Qg',
-               "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
-             }
+       Header: Created (Code=2.01)
+       Content-Type: "application/cose+cbor"
+       Payload:
+       {
+         "access_token" : b64'SlAV32hkKG ...
+          (remainder of access token omitted for brevity)',
+         "profile" : "coap_oscoap",
+         "expires_in" : "3600",
+         "cnf" : {
+           "COSE_Key" : {
+             "kty" : "Symmetric",
+             "alg" : "AES-CCM-16-64-128",
+             "clientId" : b64'qA',
+             "serverId" : b64'Qg',
+             "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
            }
          }
+       }
 
-         Figure 1: Example AS response with OSCOAP parameters.
+       Figure 1: Example AS response with OSCOAP parameters.
 
    Figure 2 shows an example CWT, containing the necessary OSCOAP
    parameters in the 'cnf' claim, in CBOR diagnostic notation without
    tag and value abbreviations.
 
-       {
-         "aud" : "tempSensorInLivingRoom",
-         "iat" : "1360189224",
-         "exp" : "1360289224",
-         "scope" :  "temperature_g firmware_p",
-         "cnf" : {
-           "COSE_Key" : {
-             "kty" : "Symmetric",
-             "alg" : "AES-CCM-16-64-128",
-             "clientId" : b64'Qg',
-             "serverId" : b64'qA',
-             "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
-         }
+     {
+       "aud" : "tempSensorInLivingRoom",
+       "iat" : "1360189224",
+       "exp" : "1360289224",
+       "scope" :  "temperature_g firmware_p",
+       "cnf" : {
+         "COSE_Key" : {
+           "kty" : "Symmetric",
+           "alg" : "AES-CCM-16-64-128",
+           "clientId" : b64'Qg',
+           "serverId" : b64'qA',
+           "k" : b64'+a+Dg2jjU+eIiOFCa9lObw'
        }
+     }
 
-          Figure 2: Example CWT with OSCOAP parameters.
+        Figure 2: Example CWT with OSCOAP parameters.
 
+2.3.  Client to Authorization Server
 
-
-
+   As specified in the ACE framework section 5.5
+   [I-D.ietf-ace-oauth-authz], the Client and AS can also use CoAP
+   instead of HTTP to communicate via the token endpoint.  This section
+   specifies how to use OSCOAP between Client and AS together with CoAP.
 
 
 
@@ -338,12 +338,6 @@ Seitz, et al.             Expires April 7, 2018                 [Page 6]
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
-2.3.  Client to Authorization Server
-
-   As specified in the ACE framework section 5.5
-   [I-D.ietf-ace-oauth-authz], the Client and AS can also use CoAP
-   instead of HTTP to communicate via the token endpoint.  This section
-   specifies how to use OSCOAP between Client and AS together with CoAP.
    The use of OSCOAP for this communication is OPTIONAL in this profile,
    other security protocols (such as DTLS) MAY be used instead.
 
@@ -383,6 +377,12 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 7.  References
 
+7.1.  Normative References
+
+   [I-D.ietf-ace-cbor-web-token]
+              Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
+              "CBOR Web Token (CWT)", draft-ietf-ace-cbor-web-token-08
+              (work in progress), August 2017.
 
 
 
@@ -393,13 +393,6 @@ Seitz, et al.             Expires April 7, 2018                 [Page 7]
 
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
-
-7.1.  Normative References
-
-   [I-D.ietf-ace-cbor-web-token]
-              Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
-              "CBOR Web Token (CWT)", draft-ietf-ace-cbor-web-token-08
-              (work in progress), August 2017.
 
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
@@ -441,15 +434,6 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
               environments", draft-ietf-ace-actors-05 (work in
               progress), March 2017.
 
-
-
-
-
-Seitz, et al.             Expires April 7, 2018                 [Page 8]
-
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
-
-
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
@@ -458,6 +442,13 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
               FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
               <https://www.rfc-editor.org/info/rfc4949>.
+
+
+
+Seitz, et al.             Expires April 7, 2018                 [Page 8]
+
+Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
@@ -497,6 +488,15 @@ Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)
    "coap_oscoap_edhoc" and follow Appendix A to derive the security
    context to run OSCOAP.
 
+   Note that in the case described in this section, the 'expires_in'
+   parameter, defined in section 4.2.2. of [RFC6749] defines the
+   lifetime in seconds of both the access token and the shared secret.
+   After expiration, C MUST acquire a new access token from the AS, and
+   run EDHOC again, as specified in this section
+
+
+
+
 
 
 
@@ -505,12 +505,6 @@ Seitz, et al.             Expires April 7, 2018                 [Page 9]
 
 Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
-
-   Note that in the case described in this section, the 'expires_in'
-   parameter, defined in section 4.2.2. of [RFC6749] defines the
-   lifetime in seconds of both the access token and the shared secret.
-   After expiration, C MUST acquire a new access token from the AS, and
-   run EDHOC again, as specified in this section
 
 A.1.  Using Asymmetric Keys
 
@@ -551,6 +545,12 @@ A.1.  Using Asymmetric Keys
 
    Figure 4 shows an example of a corresponding response in CBOR
    diagnostic notation without tag and value abbreviations.
+
+
+
+
+
+
 
 
 

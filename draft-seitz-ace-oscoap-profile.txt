@@ -5,10 +5,10 @@
 ACE Working Group                                               L. Seitz
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                            F. Palombini
-Expires: April 7, 2018                                       Ericsson AB
+Expires: April 19, 2018                                      Ericsson AB
                                                            M. Gunnarsson
                                                             RISE SICS AB
-                                                         October 4, 2017
+                                                        October 16, 2017
 
 
  OSCOAP profile of the Authentication and Authorization for Constrained
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 7, 2018.
+   This Internet-Draft will expire on April 19, 2018.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 1]
+Seitz, et al.            Expires April 19, 2018                 [Page 1]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    to this document.  Code Components extracted from this document must
@@ -82,7 +82,8 @@ Table of Contents
      A.1.  Using Asymmetric Keys . . . . . . . . . . . . . . . . . .  10
      A.2.  Using Symmetric Keys  . . . . . . . . . . . . . . . . . .  11
      A.3.  Processing  . . . . . . . . . . . . . . . . . . . . . . .  13
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   Appendix B.  Profile Requirements . . . . . . . . . . . . . . . .  14
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
@@ -108,10 +109,9 @@ Table of Contents
 
 
 
-
-Seitz, et al.             Expires April 7, 2018                 [Page 2]
+Seitz, et al.            Expires April 19, 2018                 [Page 2]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 1.1.  Terminology
@@ -165,9 +165,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 3]
+Seitz, et al.            Expires April 19, 2018                 [Page 3]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    servers for which this access token is valid, and follow Section 2.2
@@ -221,9 +221,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 4]
+Seitz, et al.            Expires April 19, 2018                 [Page 4]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same
@@ -246,30 +246,30 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
    clientId value received and the Recipient ID to the serverId value,
    and RS should do the opposite.
 
-  +----------+-------+----------------+------------+-------------------+
-  | name     | label | CBOR type      | registry   | description       |
-  +----------+-------+----------------+------------+-------------------+
-  | clientId | TBD   | bstr           |            | Identifies the    |
-  |          |       |                |            | client in an      |
-  |          |       |                |            | OSCOAP context    |
-  |          |       |                |            | using this key    |
-  |          |       |                |            |                   |
-  | serverId | TBD   | bstr           |            | Identifies the    |
-  |          |       |                |            | server in an      |
-  |          |       |                |            | OSCOAP context    |
-  |          |       |                |            | using this key    |
-  |          |       |                |            |                   |
-  | kdf      | TBD   | bstr           |            | Identifies the    |
-  |          |       |                |            | KDF algorithm in  |
-  |          |       |                |            | an OSCOAP context |
-  |          |       |                |            | using this key    |
-  |          |       |                |            |                   |
-  | slt      | TBD   | bstr           |            | Identifies the    |
-  |          |       |                |            | master salt in    |
-  |          |       |                |            | an OSCOAP context |
-  |          |       |                |            | using this key    |
-  +----------+-------+----------------+------------+-------------------+
-        Table 1: Additional common header parameters for COSE_Key
+   +----------+-------+--------------+------------+-------------------+
+   | name     | label | CBOR type    | registry   | description       |
+   +----------+-------+--------------+------------+-------------------+
+   | clientId | TBD   | bstr         |            | Identifies the    |
+   |          |       |              |            | client in an      |
+   |          |       |              |            | OSCOAP context    |
+   |          |       |              |            | using this key    |
+   |          |       |              |            |                   |
+   | serverId | TBD   | bstr         |            | Identifies the    |
+   |          |       |              |            | server in an      |
+   |          |       |              |            | OSCOAP context    |
+   |          |       |              |            | using this key    |
+   |          |       |              |            |                   |
+   | kdf      | TBD   | bstr         |            | Identifies the    |
+   |          |       |              |            | KDF algorithm in  |
+   |          |       |              |            | an OSCOAP context |
+   |          |       |              |            | using this key    |
+   |          |       |              |            |                   |
+   | slt      | TBD   | bstr         |            | Identifies the    |
+   |          |       |              |            | master salt in    |
+   |          |       |              |            | an OSCOAP context |
+   |          |       |              |            | using this key    |
+   +----------+-------+--------------+------------+-------------------+
+       Table 1: Additional common header parameters for COSE_Key
 
 
    Figure 1 shows an example of such an AS response, in CBOR diagnostic
@@ -277,9 +277,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 5]
+Seitz, et al.            Expires April 19, 2018                 [Page 5]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
        Header: Created (Code=2.01)
@@ -333,9 +333,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 6]
+Seitz, et al.            Expires April 19, 2018                 [Page 6]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    The use of OSCOAP for this communication is OPTIONAL in this profile,
@@ -389,9 +389,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 7]
+Seitz, et al.            Expires April 19, 2018                 [Page 7]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    [I-D.ietf-ace-oauth-authz]
@@ -445,9 +445,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 8]
+Seitz, et al.            Expires April 19, 2018                 [Page 8]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
@@ -501,9 +501,9 @@ Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)
 
 
 
-Seitz, et al.             Expires April 7, 2018                 [Page 9]
+Seitz, et al.            Expires April 19, 2018                 [Page 9]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 A.1.  Using Asymmetric Keys
@@ -557,9 +557,9 @@ A.1.  Using Asymmetric Keys
 
 
 
-Seitz, et al.             Expires April 7, 2018                [Page 10]
+Seitz, et al.            Expires April 19, 2018                [Page 10]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
      Header: Created (Code=2.01)
@@ -613,9 +613,9 @@ A.2.  Using Symmetric Keys
 
 
 
-Seitz, et al.             Expires April 7, 2018                [Page 11]
+Seitz, et al.            Expires April 19, 2018                [Page 11]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
      Header: Created (Code=2.01)
@@ -669,9 +669,9 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
 
 
-Seitz, et al.             Expires April 7, 2018                [Page 12]
+Seitz, et al.            Expires April 19, 2018                [Page 12]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 A.3.  Processing
@@ -725,9 +725,9 @@ A.3.  Processing
 
 
 
-Seitz, et al.             Expires April 7, 2018                [Page 13]
+Seitz, et al.            Expires April 19, 2018                [Page 13]
 
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
                     Resource
@@ -770,21 +770,55 @@ Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
 
    Figure 7: Access token and key establishment with EDHOC
 
+Appendix B.  Profile Requirements
+
+   This section lists the specifications on this profile based on the
+   requirements on the framework, as requested in Appendix C. of
+   [I-D.ietf-ace-oauth-authz].
+
+   o  (Optional) discovery process of how the client finds the right AS
+      for an RS it wants to send a request to: Not specified
+
+
+
+Seitz, et al.            Expires April 19, 2018                [Page 14]
+
+Internet-Draft            OSCOAP Profile of ACE             October 2017
+
+
+   o  communication protocol the client and the RS must use: CoAP
+
+   o  security protocol the client and RS must use: OSCOAP
+
+   o  how the client and the RS mutually authenticate: Implicitly by
+      possession of a common OSCOAP security context
+
+   o  Content-format of the protocol messages: "application/cose+cbor"
+
+   o  proof-of-possession protocol(s) and how to select one; which key
+      types (e.g. symmetric/asymmetric) supported: OSCOAP algorithms;
+      pre-established symmetric keys
+
+   o  profile identifier: coap_oscoap
+
+   o  (Optional) how the RS talks to the AS for introspection: HTTP/CoAP
+      (+ TLS/DTLS/OSCOAP)
+
+   o  how the client talks to the AS for requesting a token: HTTP/CoAP
+      (+ TLS/DTLS/OSCOAP)
+
+   o  how/if the /authz-info endpoint is protected: Security protocol
+      above
+
+   o  (Optional)other methods of token transport than the /authz-info
+      endpoint: no
+
 Acknowledgments
 
    The author wishes to thank Jim Schaad, Goeran Selander and Marco
    Tiloca for the input on this memo.  The error responses specified in
    Appendix A.3 were originally specified by Gerdes et al. in
    [I-D.gerdes-ace-dcaf-authorize].
-
-
-
-
-
-Seitz, et al.             Expires April 7, 2018                [Page 14]
-
-Internet-DrafOSCOAP profile of the Authentication and Autho October 2017
-
 
 Authors' Addresses
 
@@ -795,6 +829,17 @@ Authors' Addresses
    SWEDEN
 
    Email: ludwig.seitz@ri.se
+
+
+
+
+
+
+
+
+Seitz, et al.            Expires April 19, 2018                [Page 15]
+
+Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    Francesca Palombini
@@ -837,4 +882,15 @@ Authors' Addresses
 
 
 
-Seitz, et al.             Expires April 7, 2018                [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+Seitz, et al.            Expires April 19, 2018                [Page 16]

@@ -5,13 +5,13 @@
 ACE Working Group                                               L. Seitz
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                            F. Palombini
-Expires: April 19, 2018                                      Ericsson AB
+Expires: April 28, 2018                                      Ericsson AB
                                                            M. Gunnarsson
                                                             RISE SICS AB
-                                                        October 16, 2017
+                                                        October 25, 2017
 
 
- OSCOAP profile of the Authentication and Authorization for Constrained
+ OSCORE profile of the Authentication and Authorization for Constrained
                          Environments Framework
                  draft-seitz-ace-oscoap-profile-latest
 
@@ -19,9 +19,10 @@ Abstract
 
    This memo specifies a profile for the Authentication and
    Authorization for Constrained Environments (ACE) framework.  It
-   utilizes Object Security of CoAP (OSCOAP) to provide communication
-   security, server authentication, and proof-of-possession for a key
-   owned by the client and bound to an OAuth 2.0 access token.
+   utilizes Object Security for Constrained RESTful Environments
+   (OSCORE) to provide communication security, server authentication,
+   and proof-of-possession for a key owned by the client and bound to an
+   OAuth 2.0 access token.
 
 Status of This Memo
 
@@ -38,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 19, 2018.
+   This Internet-Draft will expire on April 28, 2018.
 
 Copyright Notice
 
@@ -49,15 +50,15 @@ Copyright Notice
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
-   carefully, as they describe your rights and restrictions with respect
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 1]
+Seitz, et al.            Expires April 28, 2018                 [Page 1]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
+   carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
@@ -68,23 +69,23 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Client to Resource Server . . . . . . . . . . . . . . . . . .   3
-     2.1.  Signaling the use of OSCOAP . . . . . . . . . . . . . . .   3
-     2.2.  Key establishment for OSCOAP  . . . . . . . . . . . . . .   4
-     2.3.  Client to Authorization Server  . . . . . . . . . . . . .   6
-   3.  Resource Server to Authorization Server . . . . . . . . . . .   7
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   5.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
-   Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)  . . . .   9
-     A.1.  Using Asymmetric Keys . . . . . . . . . . . . . . . . . .  10
-     A.2.  Using Symmetric Keys  . . . . . . . . . . . . . . . . . .  11
-     A.3.  Processing  . . . . . . . . . . . . . . . . . . . . . . .  13
-   Appendix B.  Profile Requirements . . . . . . . . . . . . . . . .  14
+     2.1.  Signaling the use of OSCORE . . . . . . . . . . . . . . .   3
+     2.2.  Key establishment for OSCORE  . . . . . . . . . . . . . .   4
+   3.  Client to Authorization Server  . . . . . . . . . . . . . . .   6
+   4.  Resource Server to Authorization Server . . . . . . . . . . .   7
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   Appendix A.  Profile Requirements . . . . . . . . . . . . . . . .   9
+   Appendix B.  Using the pop-key with EDHOC (EDHOC+OSCORE)  . . . .  10
+     B.1.  Using Asymmetric Keys . . . . . . . . . . . . . . . . . .  10
+     B.2.  Using Symmetric Keys  . . . . . . . . . . . . . . . . . .  12
+     B.3.  Processing  . . . . . . . . . . . . . . . . . . . . . . .  13
    Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -94,25 +95,29 @@ Table of Contents
    token, bound to a key (the proof-of-possession key) to authorize its
    access to the resource server.  In order to provide communication
    security, proof of possession, and server authentication they use
-   Object Security of CoAP (OSCOAP) [I-D.ietf-core-object-security].
-   Optionally the client and the resource server may also use CoAP and
-   OSCOAP to communicate with the authorization server.
+   Object Security for Constrained RESTful Environments (OSCORE)
+   [I-D.ietf-core-object-security].  Optionally the client and the
+   resource server may also use CoAP and OSCORE to communicate with the
+   authorization server.
 
-   OSCOAP specifies how to use CBOR Object Signing and Encryption (COSE)
+   OSCORE specifies how to use CBOR Object Signing and Encryption (COSE)
    [RFC8152] to secure CoAP messages.  In order to provide replay and
-   reordering protection OSCOAP also introduces sequence numbers that
+   reordering protection OSCORE also introduces sequence numbers that
    are used together with COSE.
 
 
 
 
 
-
-
-Seitz, et al.            Expires April 19, 2018                 [Page 2]
+Seitz, et al.            Expires April 28, 2018                 [Page 2]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
+
+   Note that OSCORE can be used to secure HTTP messages aswell; a
+   profile of ACE similar to the one described in this document, with
+   the difference of using HTTP instead of CoAP as communication
+   protocol, could be specified analogously to this one.
 
 1.1.  Terminology
 
@@ -135,60 +140,55 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
    document that a given resource on a specific RS is associated to a
    unique AS.
 
-   Note that the term "endpoint" is used here following its OAuth
-   definition, which is to denote resources such as /token and
-   /introspect at the AS and /authz-info at the RS.  The CoAP [RFC7252]
-   definition, which is "An entity participating in the CoAP protocol"
-   is not used in this memo.
-
 2.  Client to Resource Server
 
-   The use of OSCOAP for arbitrary CoAP messages is specified in
+   The use of OSCORE for arbitrary CoAP messages is specified in
    [I-D.ietf-core-object-security].  This section defines the specific
    uses and their purpose for securing the communication between a
    client and a resource server, and the parameters needed to negotiate
-   the use of this profile with the token endpoint at the authorization
+   the use of this profile with the token resource at the authorization
    server as specified in section 5.5 of the ACE framework
    [I-D.ietf-ace-oauth-authz].
 
-2.1.  Signaling the use of OSCOAP
+2.1.  Signaling the use of OSCORE
 
-   A client requests a token at an AS via the /token endpoint.  This
+   A client requests a token at an AS via the /token resource.  This
    follows the message formats specified in section 5.5.1 of the ACE
    framework [I-D.ietf-ace-oauth-authz].
 
    The AS responding to a successful access token request as defined in
-   section 5.5.2 of the ACE framework can signal that the use of OSCOAP
+   section 5.5.2 of the ACE framework can signal that the use of OSCORE
    is REQUIRED for a specific access token by including the "profile"
-   parameter with the value "coap_oscoap" in the access token response.
-   This means that the client MUST use OSCOAP towards all resource
+   parameter with the value "coap_oscore" in the access token response.
+   This means that the client MUST use OSCORE towards all resource
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 3]
+
+Seitz, et al.            Expires April 28, 2018                 [Page 3]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
    servers for which this access token is valid, and follow Section 2.2
-   to derive the security context to run OSCOAP.
+   to derive the security context to run OSCORE.
 
    The error response procedures defined in section 5.5.3 of the ACE
    framework are unchanged by this profile.
 
    Note the the client and the authorization server MAY OPTIONALLY use
-   OSCOAP to protect the interaction via the /token endpoint.  See
-   section 3 for details.
+   OSCORE to protect the interaction via the /token resource.  See
+   Section 3 for details.
 
-2.2.  Key establishment for OSCOAP
+2.2.  Key establishment for OSCORE
 
-   Section 3.2 of OSCOAP [I-D.ietf-core-object-security] defines how to
+   Section 3.2 of OSCORE [I-D.ietf-core-object-security] defines how to
    derive a security context based on a shared master secret and a few
    other parameters, established between client and server.  The proof-
    of-possession key (pop-key) provisioned from the AS MAY, in case of
-   pre-shared keys, be used directly as master secret in OSCOAP.
+   pre-shared keys, be used directly as master secret in OSCORE.
 
-   If OSCOAP is used directly with the symmetric pop-key as master
+   If OSCORE is used directly with the symmetric pop-key as master
    secret, then the AS MUST provision the following data, in response to
    the access token request:
 
@@ -221,15 +221,15 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 4]
+Seitz, et al.            Expires April 28, 2018                 [Page 4]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
-   token, if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same
+   token; if the token is a CWT [I-D.ietf-ace-cbor-web-token], the same
    COSE_Key structure MUST be placed in the 'cnf' claim of this token.
    The AS MUST also assign identifiers to both client and RS, which are
-   then used as Sender ID and Recipient ID in the OSCOAP context as
+   then used as Sender ID and Recipient ID in the OSCORE context as
    described in section 3.1 of [I-D.ietf-core-object-security].  These
    identifiers MUST be unique in the set of all clients and RS
    identifiers for a certain AS.  Moreover, these MUST be included in
@@ -251,22 +251,22 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
    +----------+-------+--------------+------------+-------------------+
    | clientId | TBD   | bstr         |            | Identifies the    |
    |          |       |              |            | client in an      |
-   |          |       |              |            | OSCOAP context    |
+   |          |       |              |            | OSCORE context    |
    |          |       |              |            | using this key    |
    |          |       |              |            |                   |
    | serverId | TBD   | bstr         |            | Identifies the    |
    |          |       |              |            | server in an      |
-   |          |       |              |            | OSCOAP context    |
+   |          |       |              |            | OSCORE context    |
    |          |       |              |            | using this key    |
    |          |       |              |            |                   |
    | kdf      | TBD   | bstr         |            | Identifies the    |
    |          |       |              |            | KDF algorithm in  |
-   |          |       |              |            | an OSCOAP context |
+   |          |       |              |            | an OSCORE context |
    |          |       |              |            | using this key    |
    |          |       |              |            |                   |
    | slt      | TBD   | bstr         |            | Identifies the    |
    |          |       |              |            | master salt in    |
-   |          |       |              |            | an OSCOAP context |
+   |          |       |              |            | an OSCORE context |
    |          |       |              |            | using this key    |
    +----------+-------+--------------+------------+-------------------+
        Table 1: Additional common header parameters for COSE_Key
@@ -277,9 +277,9 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 5]
+Seitz, et al.            Expires April 28, 2018                 [Page 5]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
        Header: Created (Code=2.01)
@@ -288,7 +288,7 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
        {
          "access_token" : b64'SlAV32hkKG ...
           (remainder of access token omitted for brevity)',
-         "profile" : "coap_oscoap",
+         "profile" : "coap_oscore",
          "expires_in" : "3600",
          "cnf" : {
            "COSE_Key" : {
@@ -301,9 +301,9 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
          }
        }
 
-       Figure 1: Example AS response with OSCOAP parameters.
+       Figure 1: Example AS response with OSCORE parameters.
 
-   Figure 2 shows an example CWT, containing the necessary OSCOAP
+   Figure 2 shows an example CWT, containing the necessary OSCORE
    parameters in the 'cnf' claim, in CBOR diagnostic notation without
    tag and value abbreviations.
 
@@ -322,62 +322,64 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
        }
      }
 
-        Figure 2: Example CWT with OSCOAP parameters.
+        Figure 2: Example CWT with OSCORE parameters.
 
-2.3.  Client to Authorization Server
+3.  Client to Authorization Server
 
    As specified in the ACE framework section 5.5
    [I-D.ietf-ace-oauth-authz], the Client and AS can also use CoAP
-   instead of HTTP to communicate via the token endpoint.  This section
-   specifies how to use OSCOAP between Client and AS together with CoAP.
+   instead of HTTP to communicate via the token resource.  This section
+   specifies how to use OSCORE between Client and AS together with CoAP.
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 6]
+Seitz, et al.            Expires April 28, 2018                 [Page 6]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
-   The use of OSCOAP for this communication is OPTIONAL in this profile,
+   The use of OSCORE for this communication is OPTIONAL in this profile,
    other security protocols (such as DTLS) MAY be used instead.
 
-   The client and the AS are expected to have pre-established
-   credentials (e.g. raw public keys).  How these credentials are
-   established is out of scope for this profile.  Furthermore the client
-   and the AS communicate using CoAP through the token endpoint as
-   specified in section 5.5 of [I-D.ietf-ace-oauth-authz].
+   The client and the AS are expected to have pre-established security
+   contexts in place.  How these security contexts are established is
+   out of scope for this profile.  Furthermore the client and the AS
+   communicate using OSCORE ([I-D.ietf-core-object-security]) through
+   the introspection resource as specified in section 5.6 of
+   [I-D.ietf-ace-oauth-authz].
 
-3.  Resource Server to Authorization Server
+4.  Resource Server to Authorization Server
 
    As specified in the ACE framework section 5.6
    [I-D.ietf-ace-oauth-authz], the RS and AS can also use CoAP instead
-   of HTTP to communicate via the introspection endpoint.  This section
-   specifies how to use OSCOAP between RS and AS together with CoAP.
-   The use of OSCOAP for this communication is OPTIONAL in this profile,
-   other security protocols (such as DTLS) MAY be used instead.
+   of HTTP to communicate via the introspection resource.  This section
+   specifies how to use OSCORE between RS and AS.  The use of OSCORE for
+   this communication is OPTIONAL in this profile, other security
+   protocols (such as DTLS) MAY be used instead.
 
-   The RS and the AS are expected to have pre-established credentials
-   (e.g. symmetric keys).  How these credentials are established is out
-   of scope for this profile.  Furthermore the RS and the AS communicate
-   using CoAP through the introspection endpoint as specified in section
-   5.6 of [I-D.ietf-ace-oauth-authz].
+   The RS and the AS are expected to have pre-established security
+   contexts in place.  How these security contexts are established is
+   out of scope for this profile.  Furthermore the RS and the AS
+   communicate using OSCORE ([I-D.ietf-core-object-security]) through
+   the introspection resource as specified in section 5.6 of
+   [I-D.ietf-ace-oauth-authz].
 
-4.  Security Considerations
-
-   TBD.
-
-5.  Privacy Considerations
+5.  Security Considerations
 
    TBD.
 
-6.  IANA Considerations
+6.  Privacy Considerations
 
-   TBD. 'coap_oscoap' as profile id.  Header parameters 'sid', 'rid',
+   TBD.
+
+7.  IANA Considerations
+
+   TBD. 'coap_oscore' as profile id.  Header parameters 'sid', 'rid',
    'kdf' and 'slt' for COSE_Key.
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [I-D.ietf-ace-cbor-web-token]
               Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
@@ -387,11 +389,9 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 
-
-
-Seitz, et al.            Expires April 19, 2018                 [Page 7]
+Seitz, et al.            Expires April 28, 2018                 [Page 7]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
    [I-D.ietf-ace-oauth-authz]
@@ -420,7 +420,7 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
               RFC 8152, DOI 10.17487/RFC8152, July 2017,
               <https://www.rfc-editor.org/info/rfc8152>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [I-D.gerdes-ace-dcaf-authorize]
               Gerdes, S., Bergmann, O., and C. Bormann, "Delegated CoAP
@@ -445,9 +445,9 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 19, 2018                 [Page 8]
+Seitz, et al.            Expires April 28, 2018                 [Page 8]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
@@ -463,17 +463,60 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
               DOI 10.17487/RFC7231, June 2014, <https://www.rfc-
               editor.org/info/rfc7231>.
 
-Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)
+Appendix A.  Profile Requirements
+
+   This section lists the specifications on this profile based on the
+   requirements on the framework, as requested in Appendix C. of
+   [I-D.ietf-ace-oauth-authz].
+
+   o  (Optional) discovery process of how the client finds the right AS
+      for an RS it wants to send a request to: Not specified
+
+   o  communication protocol the client and the RS must use: CoAP
+
+   o  security protocol the client and RS must use: OSCORE
+
+   o  how the client and the RS mutually authenticate: Implicitly by
+      possession of a common OSCORE security context
+
+   o  Content-format of the protocol messages: "application/cose+cbor"
+
+   o  proof-of-possession protocol(s) and how to select one; which key
+      types (e.g. symmetric/asymmetric) supported: OSCORE algorithms;
+      pre-established symmetric keys
+
+   o  profile identifier: coap_oscore
+
+   o  (Optional) how the RS talks to the AS for introspection: HTTP/CoAP
+      (+ TLS/DTLS/OSCORE)
+
+   o  how the client talks to the AS for requesting a token: HTTP/CoAP
+      (+ TLS/DTLS/OSCORE)
+
+   o  how/if the /authz-info endpoint is protected: Security protocol
+      above
+
+   o  (Optional)other methods of token transport than the /authz-info
+      endpoint: no
+
+
+
+Seitz, et al.            Expires April 28, 2018                 [Page 9]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
+
+Appendix B.  Using the pop-key with EDHOC (EDHOC+OSCORE)
 
    EDHOC specifies an authenticated Diffie-Hellman protocol that allows
    two parties to use CBOR [RFC7049] and COSE in order to establish a
    shared secret key with perfect forward secrecy.  The use of Ephemeral
    Diffie-Hellman Over COSE (EDHOC) [I-D.selander-ace-cose-ecdhe] in
-   this profile in addition to OSCOAP, provides perfect forward secrecy
+   this profile in addition to OSCORE, provides perfect forward secrecy
    (PFS) and the initial proof-of-possession, which ties the proof-of-
-   possession key to an OSCOAP security context.
+   possession key to an OSCORE security context.
 
-   If EDHOC is used together with OSCOAP, and the pop-key (symmetric or
+   If EDHOC is used together with OSCORE, and the pop-key (symmetric or
    asymmetric) is used to authenticate the messages in EDHOC, then the
    AS MUST provision the following data, in response to the access token
    request:
@@ -484,9 +527,9 @@ Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)
 
    How these parameters are communicated depends on the type of key
    (asymmetric or symmetric).  Moreover, the AS MUST signal the use of
-   OSCOAP + EDHOC with the 'profile' parameter set to
-   "coap_oscoap_edhoc" and follow Appendix A to derive the security
-   context to run OSCOAP.
+   OSCORE + EDHOC with the 'profile' parameter set to
+   "coap_oscore_edhoc" and follow Appendix B to derive the security
+   context to run OSCORE.
 
    Note that in the case described in this section, the 'expires_in'
    parameter, defined in section 4.2.2. of [RFC6749] defines the
@@ -494,19 +537,7 @@ Appendix A.  Using the pop-key with EDHOC (EDHOC+OSCOAP)
    After expiration, C MUST acquire a new access token from the AS, and
    run EDHOC again, as specified in this section
 
-
-
-
-
-
-
-
-Seitz, et al.            Expires April 19, 2018                 [Page 9]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
-
-
-A.1.  Using Asymmetric Keys
+B.1.  Using Asymmetric Keys
 
    In case of an asymmetric key, C MUST communicate its own asymmetric
    key to the AS in the 'cnf' parameter of the access token request, as
@@ -522,6 +553,14 @@ A.1.  Using Asymmetric Keys
 
    Figure 3 shows an example of such a request in CBOR diagnostic
    notation without tag and value abbreviations.
+
+
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 10]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
 
    Header: POST (Code=0.02)
    Uri-Host: "server.example.com"
@@ -541,26 +580,10 @@ A.1.  Using Asymmetric Keys
     }
    }
 
-   Figure 3: Example access token request (OSCOAP+EDHOC, asymmetric).
+   Figure 3: Example access token request (OSCORE+EDHOC, asymmetric).
 
    Figure 4 shows an example of a corresponding response in CBOR
    diagnostic notation without tag and value abbreviations.
-
-
-
-
-
-
-
-
-
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 10]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
-
 
      Header: Created (Code=2.01)
      Content-Type: "application/cose+cbor"
@@ -568,7 +591,7 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
      {
        "access_token" : b64'SlAV32hkKG ...
         (contains "kid" : "client_key")',
-       "profile" : "coap_oscoap_edhoc",
+       "profile" : "coap_oscore_edhoc",
        "expires_in" : "3600",
        "cnf" : {
          "COSE_Key" : {
@@ -581,9 +604,21 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
        }
      }
 
-   Figure 4: Example AS response (EDHOC+OSCOAP, asymmetric).
+   Figure 4: Example AS response (EDHOC+OSCORE, asymmetric).
 
-A.2.  Using Symmetric Keys
+
+
+
+
+
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 11]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
+
+B.2.  Using Symmetric Keys
 
    In the case of a symmetric key, the AS MUST communicate the key to
    the client in the 'cnf' parameter of the access token response, as
@@ -597,34 +632,13 @@ A.2.  Using Symmetric Keys
    response to the access token request when EDHOC is used.  The example
    uses CBOR diagnostic notation without tag and value abbreviations.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 11]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
-
-
      Header: Created (Code=2.01)
      Content-Type: "application/cose+cbor"
      Payload:
      {
        "access_token" : b64'SlAV32hkKG ...
         (remainder of access token omitted for brevity)',
-       "profile" : "coap_oscoap_edhoc",
+       "profile" : "coap_oscore_edhoc",
        "expires_in" : "3600",
        "cnf" : {
          "COSE_Key" : {
@@ -635,7 +649,7 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
        }
      }
 
-   Figure 5: Example AS response (EDHOC+OSCOAP, symmetric).
+   Figure 5: Example AS response (EDHOC+OSCORE, symmetric).
 
    In both cases, the AS MUST also include the same key identifier as
    'kid' parameter in the access token metadata.  If the access token is
@@ -643,9 +657,22 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
    placed inside the 'cnf' claim as 'kid' parameter of the COSE_Key or
    directly in the 'cnf' structure (if the key is only referenced).
 
-   Figure 6 shows an example CWT containing the necessary EDHOC+OSCOAP
+   Figure 6 shows an example CWT containing the necessary EDHOC+OSCORE
    parameters in the 'cnf' claim, in CBOR diagnostic notation without
    tag and value abbreviations.
+
+
+
+
+
+
+
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 12]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
 
    {
      "aud" : "tempSensorInLivingRoom",
@@ -660,21 +687,13 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
      }
    }
 
-     Figure 6: Example CWT with EDHOC+OSCOAP, symmetric case.
+     Figure 6: Example CWT with EDHOC+OSCORE, symmetric case.
 
-   All other parameters defining OSCOAP security context are derived
+   All other parameters defining OSCORE security context are derived
    from EDHOC message exchange, including the master secret (see
    Appendix C.2 of [I-D.selander-ace-cose-ecdhe]).
 
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 12]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
-
-
-A.3.  Processing
+B.3.  Processing
 
    To provide forward secrecy and mutual authentication in the case of
    pre-shared keys, pre-established raw public keys or with X.509
@@ -685,7 +704,7 @@ A.3.  Processing
    modifications.
 
    The first EDHOC message is sent after the access token is posted to
-   the /authz-info endpoint of the RS as specified in section 5.7.1 of
+   the /authz-info resource of the RS as specified in section 5.7.1 of
    [I-D.ietf-ace-oauth-authz].  Then the EDHOC message_1 is sent and the
    EDHOC protocol is initiated [I-D.selander-ace-cose-ecdhe]).
 
@@ -704,13 +723,20 @@ A.3.  Processing
    o  If RS has an access token for C but not for the resource that C
       has requested, RS MUST reject the request with a 4.03 (Forbidden).
 
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 13]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
+
    o  If RS has an access token for C but it does not cover the action C
       requested on the resource, RS MUST reject the request with a 4.05
       (Method Not Allowed).
 
    o  If all verifications above succeeds, further communication between
-      client and RS is protected with OSCOAP, including the RS response
-      to the OSCOAP request.
+      client and RS is protected with OSCORE, including the RS response
+      to the OSCORE request.
 
    In the case of EDHOC being used with symmetric keys, the protocol in
    section 5 of [I-D.selander-ace-cose-ecdhe] MUST be used.  If the key
@@ -720,14 +746,44 @@ A.3.  Processing
    case the protocol in section 4 of [I-D.selander-ace-cose-ecdhe] MUST
    be used.
 
-   Figure 7 illustrates the message exchanges for using OSCOAP+EDHOC
+   Figure 7 illustrates the message exchanges for using OSCORE+EDHOC
    (step C in figure 1 of [I-D.ietf-ace-oauth-authz]).
 
 
 
-Seitz, et al.            Expires April 19, 2018                [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 14]
 
-Internet-Draft            OSCOAP Profile of ACE             October 2017
+Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
                     Resource
@@ -760,65 +816,31 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
     start of protected communication
            |          |
            +--------->| CoAP request +
-           |  OSCOAP  | Object-Security option
+           |  OSCORE  | Object-Security option
            | request  |
            |          |
            |<---------+ CoAP response +
-           |  OSCOAP  | Object-Security option
+           |  OSCORE  | Object-Security option
            | response |
            |          |
 
    Figure 7: Access token and key establishment with EDHOC
 
-Appendix B.  Profile Requirements
-
-   This section lists the specifications on this profile based on the
-   requirements on the framework, as requested in Appendix C. of
-   [I-D.ietf-ace-oauth-authz].
-
-   o  (Optional) discovery process of how the client finds the right AS
-      for an RS it wants to send a request to: Not specified
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 14]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
-
-
-   o  communication protocol the client and the RS must use: CoAP
-
-   o  security protocol the client and RS must use: OSCOAP
-
-   o  how the client and the RS mutually authenticate: Implicitly by
-      possession of a common OSCOAP security context
-
-   o  Content-format of the protocol messages: "application/cose+cbor"
-
-   o  proof-of-possession protocol(s) and how to select one; which key
-      types (e.g. symmetric/asymmetric) supported: OSCOAP algorithms;
-      pre-established symmetric keys
-
-   o  profile identifier: coap_oscoap
-
-   o  (Optional) how the RS talks to the AS for introspection: HTTP/CoAP
-      (+ TLS/DTLS/OSCOAP)
-
-   o  how the client talks to the AS for requesting a token: HTTP/CoAP
-      (+ TLS/DTLS/OSCOAP)
-
-   o  how/if the /authz-info endpoint is protected: Security protocol
-      above
-
-   o  (Optional)other methods of token transport than the /authz-info
-      endpoint: no
-
 Acknowledgments
 
-   The author wishes to thank Jim Schaad, Goeran Selander and Marco
+   The authors wish to thank Jim Schaad, Goeran Selander and Marco
    Tiloca for the input on this memo.  The error responses specified in
-   Appendix A.3 were originally specified by Gerdes et al. in
+   Appendix B.3 were originally specified by Gerdes et al. in
    [I-D.gerdes-ace-dcaf-authorize].
+
+
+
+
+
+Seitz, et al.            Expires April 28, 2018                [Page 15]
+
+Internet-Draft            OSCORE Profile of ACE             October 2017
+
 
 Authors' Addresses
 
@@ -829,17 +851,6 @@ Authors' Addresses
    SWEDEN
 
    Email: ludwig.seitz@ri.se
-
-
-
-
-
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 15]
-
-Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
    Francesca Palombini
@@ -882,15 +893,4 @@ Internet-Draft            OSCOAP Profile of ACE             October 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Seitz, et al.            Expires April 19, 2018                [Page 16]
+Seitz, et al.            Expires April 28, 2018                [Page 16]

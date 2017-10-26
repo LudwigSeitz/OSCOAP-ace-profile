@@ -99,7 +99,7 @@
       </t>
 
       <t>
-        Note that OSCORE can be used to secure HTTP messages aswell; a profile of ACE similar to the one described in this document, with the difference of using HTTP instead of CoAP as communication protocol, could be specified analogously to this one.
+        Note that OSCORE can be used to secure CoAP messages, as well as HTTP and combinations of HTTP and CoAP; a profile of ACE similar to the one described in this document, with the difference of using HTTP instead of CoAP as communication protocol, could be specified analogously to this one.
       </t>
 
       <section anchor="terminology" title=" Terminology">
@@ -156,7 +156,7 @@
       <section anchor="oscore-only" title="Key establishment for OSCORE"> 
 
         <t>
-          Section 3.2 of OSCORE <xref target="I-D.ietf-core-object-security"/> defines how to derive a security context based on a shared master secret and a few other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as master secret in OSCORE.
+          Section 3.2 of OSCORE <xref target="I-D.ietf-core-object-security"/> defines how to derive a security context based on a shared master secret and a set of other parameters, established between client and server.  The proof-of-possession key (pop-key) provisioned from the AS MAY, in case of pre-shared keys, be used directly as master secret in OSCORE.
         </t>
 
         <t>

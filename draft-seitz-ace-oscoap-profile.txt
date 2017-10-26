@@ -5,10 +5,10 @@
 ACE Working Group                                               L. Seitz
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                            F. Palombini
-Expires: April 28, 2018                                      Ericsson AB
+Expires: April 29, 2018                                      Ericsson AB
                                                            M. Gunnarsson
                                                             RISE SICS AB
-                                                        October 25, 2017
+                                                        October 26, 2017
 
 
  OSCORE profile of the Authentication and Authorization for Constrained
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 28, 2018.
+   This Internet-Draft will expire on April 29, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 1]
+Seitz, et al.            Expires April 29, 2018                 [Page 1]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -109,15 +109,16 @@ Table of Contents
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 2]
+Seitz, et al.            Expires April 29, 2018                 [Page 2]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
-   Note that OSCORE can be used to secure HTTP messages aswell; a
-   profile of ACE similar to the one described in this document, with
-   the difference of using HTTP instead of CoAP as communication
-   protocol, could be specified analogously to this one.
+   Note that OSCORE can be used to secure CoAP messages, as well as HTTP
+   and combinations of HTTP and CoAP; a profile of ACE similar to the
+   one described in this document, with the difference of using HTTP
+   instead of CoAP as communication protocol, could be specified
+   analogously to this one.
 
 1.1.  Terminology
 
@@ -164,8 +165,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-
-Seitz, et al.            Expires April 28, 2018                 [Page 3]
+Seitz, et al.            Expires April 29, 2018                 [Page 3]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -183,10 +183,10 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 2.2.  Key establishment for OSCORE
 
    Section 3.2 of OSCORE [I-D.ietf-core-object-security] defines how to
-   derive a security context based on a shared master secret and a few
-   other parameters, established between client and server.  The proof-
-   of-possession key (pop-key) provisioned from the AS MAY, in case of
-   pre-shared keys, be used directly as master secret in OSCORE.
+   derive a security context based on a shared master secret and a set
+   of other parameters, established between client and server.  The
+   proof-of-possession key (pop-key) provisioned from the AS MAY, in
+   case of pre-shared keys, be used directly as master secret in OSCORE.
 
    If OSCORE is used directly with the symmetric pop-key as master
    secret, then the AS MUST provision the following data, in response to
@@ -221,7 +221,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 4]
+Seitz, et al.            Expires April 29, 2018                 [Page 4]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -277,7 +277,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 5]
+Seitz, et al.            Expires April 29, 2018                 [Page 5]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -333,7 +333,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 6]
+Seitz, et al.            Expires April 29, 2018                 [Page 6]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -389,7 +389,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 7]
+Seitz, et al.            Expires April 29, 2018                 [Page 7]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -398,13 +398,13 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-07 (work in progress), August 2017.
+              authz-08 (work in progress), October 2017.
 
    [I-D.ietf-core-object-security]
               Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
               "Object Security for Constrained RESTful Environments
-              (OSCORE)", draft-ietf-core-object-security-05 (work in
-              progress), September 2017.
+              (OSCORE)", draft-ietf-core-object-security-06 (work in
+              progress), October 2017.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -445,7 +445,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 8]
+Seitz, et al.            Expires April 29, 2018                 [Page 8]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -501,7 +501,7 @@ Appendix A.  Profile Requirements
 
 
 
-Seitz, et al.            Expires April 28, 2018                 [Page 9]
+Seitz, et al.            Expires April 29, 2018                 [Page 9]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -557,7 +557,7 @@ B.1.  Using Asymmetric Keys
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 10]
+Seitz, et al.            Expires April 29, 2018                [Page 10]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -613,7 +613,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 11]
+Seitz, et al.            Expires April 29, 2018                [Page 11]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -669,7 +669,7 @@ B.2.  Using Symmetric Keys
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 12]
+Seitz, et al.            Expires April 29, 2018                [Page 12]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -725,7 +725,7 @@ B.3.  Processing
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 13]
+Seitz, et al.            Expires April 29, 2018                [Page 13]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -781,7 +781,7 @@ Internet-Draft            OSCORE Profile of ACE             October 2017
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 14]
+Seitz, et al.            Expires April 29, 2018                [Page 14]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -837,7 +837,7 @@ Acknowledgments
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 15]
+Seitz, et al.            Expires April 29, 2018                [Page 15]
 
 Internet-Draft            OSCORE Profile of ACE             October 2017
 
@@ -893,4 +893,4 @@ Authors' Addresses
 
 
 
-Seitz, et al.            Expires April 28, 2018                [Page 16]
+Seitz, et al.            Expires April 29, 2018                [Page 16]
